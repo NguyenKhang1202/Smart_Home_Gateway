@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Gateway.Core.Dtos.Authentications;
 using Gateway.Web.Host.Protos;
+using Gateway.Web.Host.Protos.Authentications;
 
 namespace Gateway.Web.Host.Mappers
 {
@@ -12,7 +13,8 @@ namespace Gateway.Web.Host.Mappers
             CreateMap<LoginInputDto, LoginRequest>();
 
             // Register
-            CreateMap<RegisterInputDto, RegisterRequest>();
+            CreateMap<RegisterInputDto, RegisterRequest>()
+                .ForMember(d => d.PhoneNumber, s => s.MapFrom(i => i.PhoneNumber ?? ""));
         }
 
     }

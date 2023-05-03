@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Authentications;
+using Gateway.Web.Host.Protos.Authentications;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,7 @@ namespace Gateway.Web.Host.Controllers
             _mapper = mapper;
         }
         [HttpPost("login")]
-        public async Task<ResponseDto> Login(LoginInputDto input)
+        public async Task<ResponseDto> Login([FromBody] LoginInputDto input)
         {
             try
             {
@@ -43,7 +44,7 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ResponseDto> Register(RegisterInputDto input)
+        public async Task<ResponseDto> Register([FromBody] RegisterInputDto input)
         {
             try
             {

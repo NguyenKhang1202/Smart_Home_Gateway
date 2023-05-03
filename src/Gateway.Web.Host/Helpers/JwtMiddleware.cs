@@ -1,4 +1,6 @@
-﻿namespace Gateway.Web.Host.Helpers
+﻿using Gateway.Web.Host.Protos.Authentications;
+
+namespace Gateway.Web.Host.Helpers
 {
     public class JwtMiddleware : IMiddleware
     {

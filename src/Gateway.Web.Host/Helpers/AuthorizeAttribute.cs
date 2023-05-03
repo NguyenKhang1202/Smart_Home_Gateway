@@ -1,5 +1,4 @@
-﻿using Gateway.Core.Entities;
-using Gateway.Web.Host.Protos;
+﻿using Gateway.Web.Host.Protos.Authentications;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

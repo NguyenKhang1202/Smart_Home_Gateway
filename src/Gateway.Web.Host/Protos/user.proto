@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-option csharp_namespace = "Gateway.Web.Host.Protos";
+option csharp_namespace = "Gateway.Web.Host.Protos.Users";
 
 package users;
 
-service GrpcUser {
-	// User
+service UserGrpc { 
+  // User
   rpc GetAllUsers (GetAllUsersRequest) returns (GetAllUsersResponse);
   rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
   rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
@@ -30,7 +30,10 @@ message PUser {
   string UpdatedAt = 11;
 }
 
-message GetAllUsersRequest {}
+message GetAllUsersRequest {
+  int32 SkipCount = 1;
+  int32 MaxResultCount = 2;
+}
 
 message GetAllUsersResponse {
   repeated PUser Items = 1;
@@ -45,7 +48,11 @@ message GetUserByIdResponse {
 }
 
 message UpdateUserRequest {
-  PUser User = 1;
+  string Id = 1;
+  string Email = 2;
+  string PhoneNumber = 3;
+  string Firstname = 4;
+  string Lastname = 5;
 }
 
 message UpdateUserResponse {

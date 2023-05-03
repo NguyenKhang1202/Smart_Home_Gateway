@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Gateway.Web.Host";
+option csharp_namespace = "Gateway.Web.Host.Protos.Authentications";
 
 package authentications;
 
