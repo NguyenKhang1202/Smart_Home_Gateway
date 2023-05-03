@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+option csharp_namespace = "Gateway.Web.Host.Protos";
+
+package users;
+
+service GrpcUser {
+	// User
+  rpc GetAllUsers (GetAllUsersRequest) returns (GetAllUsersResponse);
+  rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+
+  // Role
+  rpc GetRoles (GetRolesRequest) returns (GetRolesResponse);
+  rpc GetRoleById (GetRoleByIdRequest) returns (GetRoleByIdResponse);
+}
+
+message PUser {
+  string Id = 1;
+  string Username = 2;
+  string Password = 3;
+  string Email = 4;
+  string PhoneNumber = 5;
+  string Firstname = 6;
+  string Lastname = 7;
+  int64 RoleId = 8;
+  int32 TenantId = 9;
+  string CreatedAt = 10;
+  string UpdatedAt = 11;
+}
+
+message GetAllUsersRequest {}
+
+message GetAllUsersResponse {
+  repeated PUser Items = 1;
+}
+
+message GetUserByIdRequest {
+  string Id = 1;
+}
+
+message GetUserByIdResponse {
+  PUser Data = 1;
+}
+
+message UpdateUserRequest {
+  PUser User = 1;
+}
+
+message UpdateUserResponse {
+  bool Data = 1;
+}
+
+message DeleteUserRequest {
+  string Id = 1;
+}
+
+message DeleteUserResponse {
+  bool Data = 1;
+}
+
+// Role messages
+message PRole {
+  string Id = 1;
+  string Name = 2;
+  string DisplayName = 3;
+  string Description = 4;
+  string CreatedAt = 5;
+  string UpdatedAt = 6;
+}
+
+message GetRolesRequest {}
+
+message GetRolesResponse {
+  repeated PRole Items = 1;
+}
+
+message GetRoleByIdRequest {
+  string Id = 1;
+}
+
+message GetRoleByIdResponse {
+  PRole Data = 1;
+}

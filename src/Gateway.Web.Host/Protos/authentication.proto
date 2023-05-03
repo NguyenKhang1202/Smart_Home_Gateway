@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+option csharp_namespace = "Gateway.Web.Host";
+
+package authentications;
+
+service AuthenticationGrpc {
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+message PUser {
+  string Id = 1;
+  string Username = 2;
+  string Password = 3;
+  string Email = 4;
+  string PhoneNumber = 5;
+  string Firstname = 6;
+  string Lastname = 7;
+  int64 RoleId = 8;
+  int32 TenantId = 9;
+  string CreatedAt = 10;
+  string UpdatedAt = 11;
+}
+
+message LoginRequest {
+  string Username = 1;
+  string Password = 2;
+}
+
+message LoginResponse {
+  string Token = 1;
+}
+
+message RegisterRequest {
+  string Username = 1;
+  string Password = 2;
+  string Email = 3;
+  string PhoneNumber = 4;
+  string Firstname = 5;
+  string Lastname = 6;
+  int64 RoleId = 7;
+  int32 TenantId = 8;
+}
+
+message RegisterResponse {
+  bool Data = 1;
+}
+
+message ValidateTokenRequest {
+  string Token = 1;
+}
+
+message ValidateTokenResponse {
+  PUser Data = 1;
+}
