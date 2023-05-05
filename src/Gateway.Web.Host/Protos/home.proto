@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+option csharp_namespace = "Gateway.Web.Host.Protos.Homes";
+
+package homes;
+ 
+service HomeGrpc {
+  rpc GetAllHomes (GetAllHomesRequest) returns (GetAllHomesResponse);
+  rpc GetHomeById (GetHomeByIdRequest) returns (GetHomeByIdResponse);
+  rpc CreateHome (CreateHomeRequest) returns (CreateHomeResponse);
+  rpc UpdateHome (UpdateHomeRequest) returns (UpdateHomeResponse);
+  rpc DeleteHome (DeleteHomeRequest) returns (DeleteHomeResponse);
+}
+
+message PHome {
+  string Id = 1;
+  string UserId = 2;
+  string SmartHomeCode = 3;
+  string Name = 4;
+  string Properties = 5;
+  string Address = 6;
+  string TenantId = 7;
+  string CreatedAt = 8;
+  string UpdatedAt = 9;
+}
+
+message GetAllHomesRequest {
+  int32 SkipCount = 1;
+  int32 MaxResultCount = 2;
+}
+
+message GetAllHomesResponse {
+  repeated PHome Items = 1;
+}
+
+message GetHomeByIdRequest {
+  string Id = 1;
+}
+
+message GetHomeByIdResponse {
+  PHome Data = 1;
+}
+
+message CreateHomeRequest {
+  string UserId = 1;
+  string SmartHomeCode = 2;
+  string Name = 3;
+  string Properties = 4;
+  string Address = 5; 
+  string TenantId = 6;
+}
+
+message CreateHomeResponse {
+  bool Data = 1;
+}
+
+message UpdateHomeRequest {
+  string Id = 1;
+  string SmartHomeCode = 2;
+  string Name = 3;
+  string Properties = 4;
+  string Address = 5;  
+}
+
+message UpdateHomeResponse {
+  bool Data = 1;
+}
+
+message DeleteHomeRequest {
+  string Id = 1;
+}
+
+message DeleteHomeResponse {
+  bool Data = 1;
+}

@@ -1,15 +1,19 @@
 ﻿using Gateway.Web.Host.Protos.Authentications;
+using Gateway.Web.Host.Protos.Users;
+using static Gateway.Web.Host.Protos.Users.UserGrpc;
 
 namespace Gateway.Web.Host.Helpers
 {
     public class JwtMiddleware : IMiddleware
     {
         private readonly AuthenticationGrpc.AuthenticationGrpcClient _authenticationGrpcClient;
-
+        private readonly UserGrpc.UserGrpcClient _userGrpcClient;
         public JwtMiddleware(
-            AuthenticationGrpc.AuthenticationGrpcClient authenticationGrpcClient)
+            AuthenticationGrpc.AuthenticationGrpcClient authenticationGrpcClient,
+            UserGrpc.UserGrpcClient userGrpcClient)
         {
             _authenticationGrpcClient = authenticationGrpcClient; 
+            _userGrpcClient = userGrpcClient;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -31,7 +35,8 @@ namespace Gateway.Web.Host.Helpers
                 });
 
                 // attach user to context on successful jwt validation
-                context.Items["User"] = response.Data;
+                PUserInfo userInfo = response.Data;
+                context.Items["User"] = userInfo;
             }
             catch(Exception ex)
             {

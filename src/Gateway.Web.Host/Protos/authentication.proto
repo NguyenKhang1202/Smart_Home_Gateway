@@ -18,10 +18,17 @@ message PUser {
   string PhoneNumber = 5;
   string Firstname = 6;
   string Lastname = 7;
-  int64 RoleId = 8;
-  int32 TenantId = 9;
+  string Role = 8;
+  string TenantId = 9;
   string CreatedAt = 10;
   string UpdatedAt = 11;
+}
+
+message PUserInfo {
+  string UserId = 1;
+  string Username = 2;
+  string Role = 3;
+  string TenantId = 4;
 }
 
 message LoginRequest {
@@ -40,8 +47,8 @@ message RegisterRequest {
   string PhoneNumber = 4;
   string Firstname = 5;
   string Lastname = 6;
-  int64 RoleId = 7;
-  int32 TenantId = 8;
+  string Role = 7;
+  string TenantId = 8;
 }
 
 message RegisterResponse {
@@ -53,5 +60,5 @@ message ValidateTokenRequest {
 }
 
 message ValidateTokenResponse {
-  PUser Data = 1;
+  PUserInfo Data = 1;
 }

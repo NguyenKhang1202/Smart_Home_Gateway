@@ -1,6 +1,7 @@
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Authentications;
 using Gateway.Web.Host.Protos.Users;
+using Gateway.Web.Host.Protos.Homes;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
@@ -23,6 +24,10 @@ IConfiguration configuration = builder.Configuration;
     services.AddGrpcClient<UserGrpc.UserGrpcClient>(o =>
     {
         o.Address = new Uri(configuration["Services:UserServiceUrl"]);
+    });
+    services.AddGrpcClient<HomeGrpc.HomeGrpcClient>(o =>
+    {
+        o.Address = new Uri(configuration["Services:HomeServiceUrl"]);
     });
 
     // add AutoMapper

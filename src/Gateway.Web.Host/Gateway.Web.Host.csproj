@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <None Remove="Protos\authentication.proto" />
+    <None Remove="Protos\home.proto" />
     <None Remove="Protos\user.proto" />
   </ItemGroup>
 
@@ -31,6 +32,7 @@
 
   <ItemGroup>
     <Protobuf Include="Protos\authentication.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\home.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\user.proto" GrpcServices="Client" />
   </ItemGroup>
 

@@ -1,41 +1,41 @@
 ﻿using AutoMapper;
 using Gateway.Core.Dtos;
-using Gateway.Core.Dtos.Users;
+using Gateway.Core.Dtos.Homes;
 using Gateway.Web.Host.Helpers;
-using Gateway.Web.Host.Protos.Users;
+using Gateway.Web.Host.Protos.Homes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Web.Host.Controllers
 {
-    [Authorize("ADMIN")]
+    [Authorize]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class HomesController : ControllerBase
     {
-        private readonly UserGrpc.UserGrpcClient _userGrpcClient;
+        private readonly HomeGrpc.HomeGrpcClient _homeGrpcClient;
         private readonly IMapper _mapper;
-        public UsersController(
-            UserGrpc.UserGrpcClient userGrpcClient,
+        public HomesController(
+            HomeGrpc.HomeGrpcClient homeGrpcClient,
             IMapper mapper
             ) 
         {
-            _userGrpcClient = userGrpcClient;
+            _homeGrpcClient = homeGrpcClient;
             _mapper = mapper;
         }
 
         [HttpGet("")]
-        public async Task<ResponseDto> GetAllUsers([FromBody] GetAllUsersInputDto input)
+        public async Task<ResponseDto> GetAllHomes([FromBody] GetAllHomesInputDto input)
         {
             try
             {
-                GetAllUsersResponse response = await _userGrpcClient.GetAllUsersAsync(
-                    _mapper.Map<GetAllUsersRequest>(input));
+                GetAllHomesResponse response = await _homeGrpcClient.GetAllHomesAsync(
+                    _mapper.Map<GetAllHomesRequest>(input));
                 return new ResponseDto()
                 {
                     Data = response.Items,
                     Success = true,
-                    Message = "Get users success"
+                    Message = "Get homes success"
                 };
             }
             catch (RpcException ex)
@@ -49,12 +49,12 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ResponseDto> GetUserById(string id)
+        public async Task<ResponseDto> GetHomeById(string id)
         {
             try
             {
-                GetUserByIdResponse response = await _userGrpcClient.GetUserByIdAsync(
-                    new GetUserByIdRequest()
+                GetHomeByIdResponse response = await _homeGrpcClient.GetHomeByIdAsync(
+                    new GetHomeByIdRequest()
                     {
                         Id = id,
                     });
@@ -62,7 +62,31 @@ namespace Gateway.Web.Host.Controllers
                 {
                     Data = response.Data,
                     Success = true,
-                    Message = "Get user success"
+                    Message = "Get home success"
+                };
+            }
+            catch (RpcException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpPost("")]
+        public async Task<ResponseDto> CreateHome([FromBody] CreateHomeInputDto input)
+        {
+            try
+            {
+                CreateHomeResponse response = await _homeGrpcClient.CreateHomeAsync(
+                    _mapper.Map<CreateHomeRequest>(input));
+                return new ResponseDto()
+                {
+                    Data = response.Data,
+                    Success = true,
+                    Message = "Create home success"
                 };
             }
             catch (RpcException ex)
@@ -76,17 +100,17 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ResponseDto> UpdateUser(string id, [FromBody] UpdateUserInputDto input)
+        public async Task<ResponseDto> UpdateHome(string id, [FromBody] UpdateHomeInputDto input)
         {
             try
             {
-                UpdateUserResponse response = await _userGrpcClient.UpdateUserAsync(
-                    _mapper.Map<UpdateUserRequest>(input));
+                UpdateHomeResponse response = await _homeGrpcClient.UpdateHomeAsync(
+                    _mapper.Map<UpdateHomeRequest>(input));
                 return new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
-                    Message = "Update user success"
+                    Message = "Update home success"
                 };
             }
             catch (RpcException ex)
@@ -100,12 +124,12 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ResponseDto> DeleteUser(string id)
+        public async Task<ResponseDto> DeleteHome(string id)
         {
             try
             {
-                DeleteUserResponse response = await _userGrpcClient.DeleteUserAsync(
-                    new DeleteUserRequest()
+                DeleteHomeResponse response = await _homeGrpcClient.DeleteHomeAsync(
+                    new DeleteHomeRequest()
                     {
                         Id = id
                     });
@@ -113,7 +137,7 @@ namespace Gateway.Web.Host.Controllers
                 {
                     Data = response.Data,
                     Success = true,
-                    Message = "Delete user success"
+                    Message = "Delete home success"
                 };
             }
             catch (RpcException ex)

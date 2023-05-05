@@ -12,8 +12,11 @@ service UserGrpc {
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
 
   // Role
-  rpc GetRoles (GetRolesRequest) returns (GetRolesResponse);
+  rpc GetAllRoles (GetAllRolesRequest) returns (GetAllRolesResponse);
   rpc GetRoleById (GetRoleByIdRequest) returns (GetRoleByIdResponse);
+  rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse);
+  rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse);
+  rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse);
 }
 
 message PUser {
@@ -24,8 +27,8 @@ message PUser {
   string PhoneNumber = 5;
   string Firstname = 6;
   string Lastname = 7;
-  int64 RoleId = 8;
-  int32 TenantId = 9;
+  string Role = 8;
+  string TenantId = 9;
   string CreatedAt = 10;
   string UpdatedAt = 11;
 }
@@ -77,9 +80,9 @@ message PRole {
   string UpdatedAt = 6;
 }
 
-message GetRolesRequest {}
+message GetAllRolesRequest {}
 
-message GetRolesResponse {
+message GetAllRolesResponse {
   repeated PRole Items = 1;
 }
 
@@ -89,4 +92,33 @@ message GetRoleByIdRequest {
 
 message GetRoleByIdResponse {
   PRole Data = 1;
+}
+
+message CreateRoleRequest {
+  string Name = 1;
+  string DisplayName = 2;
+  string Description = 3;
+}
+
+message CreateRoleResponse {
+  bool Data = 1;
+}
+
+message UpdateRoleRequest {
+  string Id = 1;
+  string Name = 2;
+  string DisplayName = 3;
+  string Description = 4;
+}
+
+message UpdateRoleResponse {
+  bool Data = 1;
+}
+
+message DeleteRoleRequest {
+  string Name = 1;
+}
+
+message DeleteRoleResponse {
+  bool Data = 1;
 }
