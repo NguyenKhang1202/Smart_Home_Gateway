@@ -20,8 +20,9 @@ message PHome {
   string Properties = 5;
   string Address = 6;
   string TenantId = 7;
-  string CreatedAt = 8;
-  string UpdatedAt = 9;
+  repeated string ImagesUrl = 8;
+  string CreatedAt = 9;
+  string UpdatedAt = 10;
 }
 
 message GetAllHomesRequest {
@@ -48,6 +49,7 @@ message CreateHomeRequest {
   string Properties = 4;
   string Address = 5; 
   string TenantId = 6;
+  repeated string ImagesUrl = 7;
 }
 
 message CreateHomeResponse {
@@ -60,6 +62,7 @@ message UpdateHomeRequest {
   string Name = 3;
   string Properties = 4;
   string Address = 5;  
+  repeated string ImagesUrl = 6;
 }
 
 message UpdateHomeResponse {

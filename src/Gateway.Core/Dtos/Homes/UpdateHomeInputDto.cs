@@ -7,5 +7,6 @@
         public string? Name { get; set; }
         public string? Properties { get; set; }
         public string? Address { get; set; }
+        public List<string> ImagesUrl { get; set; }
     }
 }
