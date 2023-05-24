@@ -1,20 +1,25 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 12000
+ENV ASPNETCORE_ENVIRONMENT=Staging
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["src/Gateway.Web.Host/Gateway.Web.Host.csproj", "src/Gateway.Web.Host/"]
-RUN dotnet restore "src/Gateway.Web.Host/Gateway.Web.Host.csproj"
+COPY ["Gateway.Application/Gateway.Application.csproj", "./Gateway.Application/"]
+COPY ["Gateway.Application.Shared/Gateway.Application.Shared.csproj", "./Gateway.Application.Shared/"]
+COPY ["Gateway.Core/Gateway.Core.csproj", "./Gateway.Core/"]
+COPY ["Gateway.Core.Shared/Gateway.Core.Shared.csproj", "./Gateway.Core.Shared/"]
+COPY ["Gateway.Domain/Gateway.Domain.csproj", "./Gateway.Domain/"]
+COPY ["Gateway.EntityFrameworkCore/Gateway.EntityFrameworkCore.csproj", "./Gateway.EntityFrameworkCore/"]
+COPY ["Gateway.Web.Host/Gateway.Web.Host.csproj", "./Gateway.Web.Host/"]
+RUN dotnet restore "./Gateway.Web.Host/Gateway.Web.Host.csproj"
 COPY . .
-WORKDIR "/src/src/Gateway.Web.Host"
-RUN dotnet build "Gateway.Web.Host.csproj" -c Release -o /app/build
+
+WORKDIR "/src/Gateway.Web.Host"
+RUN dotnet build "./Gateway.Web.Host.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Gateway.Web.Host.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Gateway.Web.Host.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
