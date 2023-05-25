@@ -1,6 +1,5 @@
 ﻿using Gateway.Web.Host.Protos.Authentications;
 using Gateway.Web.Host.Protos.Users;
-using static Gateway.Web.Host.Protos.Users.UserGrpc;
 
 namespace Gateway.Web.Host.Helpers
 {

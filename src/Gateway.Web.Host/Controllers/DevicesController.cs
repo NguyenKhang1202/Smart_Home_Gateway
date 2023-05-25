@@ -18,7 +18,7 @@ namespace Gateway.Web.Host.Controllers
         public DevicesController(
             DeviceGrpc.DeviceGrpcClient deviceGrpcClient,
             IMapper mapper
-            ) 
+            )
         {
             _deviceGrpcClient = deviceGrpcClient;
             _mapper = mapper;
