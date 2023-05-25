@@ -6,6 +6,7 @@ using Gateway.Web.Host.Protos.Devices;
 using Gateway.Core.Settings;
 using Gateway.Web.Host.Services;
 using Microsoft.OpenApi.Models;
+using Gateway.Web.Host.Protos.Rooms;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -66,6 +67,10 @@ var configuration = builder.Configuration;
     services.AddGrpcClient<DeviceGrpc.DeviceGrpcClient>(o =>
     {
         o.Address = new Uri(configuration["Services:DeviceServiceUrl"]);
+    });
+    services.AddGrpcClient<RoomGrpc.RoomGrpcClient>(o =>
+    {
+        o.Address = new Uri(configuration["Services:RoomServiceUrl"]);
     });
 
     // add AutoMapper

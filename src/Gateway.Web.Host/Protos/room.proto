@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+option csharp_namespace = "Gateway.Web.Host.Protos.Rooms";
+
+package rooms;
+ 
+service RoomGrpc {
+  rpc GetAllRooms (GetAllRoomsRequest) returns (GetAllRoomsResponse);
+  rpc GetRoomById (GetRoomByIdRequest) returns (GetRoomByIdResponse);
+  rpc CreateRoom (CreateRoomRequest) returns (CreateRoomResponse);
+  rpc UpdateRoom (UpdateRoomRequest) returns (UpdateRoomResponse);
+  rpc DeleteRoom (DeleteRoomRequest) returns (DeleteRoomResponse);
+}
+
+message PRoom {
+  string Id = 1;
+  string UserId = 2;
+  string RoomCode = 3;
+  string Name = 4;
+  string Properties = 5;
+  string TenantId = 6;
+  string HomeId = 7;
+  repeated string ImagesUrl = 8;
+  string CreatedAt = 9;
+  string UpdatedAt = 10;
+}
+
+message GetAllRoomsRequest {
+  int32 SkipCount = 1;
+  int32 MaxResultCount = 2;
+}
+
+message GetAllRoomsResponse {
+  repeated PRoom Items = 1;
+}
+
+message GetRoomByIdRequest {
+  string Id = 1;
+}
+
+message GetRoomByIdResponse {
+  PRoom Data = 1;
+}
+
+message CreateRoomRequest {
+  string UserId = 1;
+  string RoomCode = 2;
+  string Name = 3;
+  string Properties = 4;
+  string TenantId = 5;
+  string HomeId = 6;
+  repeated string ImagesUrl = 7;
+}
+
+message CreateRoomResponse {
+  bool Data = 1;
+}
+
+message UpdateRoomRequest {
+  string Id = 1;
+  string RoomCode = 2;
+  string Name = 3;
+  string Properties = 4;
+  repeated string ImagesUrl = 5;
+}
+
+message UpdateRoomResponse {
+  bool Data = 1;
+}
+
+message DeleteRoomRequest {
+  string Id = 1;
+}
+
+message DeleteRoomResponse {
+  bool Data = 1;
+}
