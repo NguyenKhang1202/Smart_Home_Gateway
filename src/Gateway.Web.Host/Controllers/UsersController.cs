@@ -25,7 +25,7 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ResponseDto> GetAllUsers([FromBody] GetAllUsersInputDto input)
+        public async Task<ResponseDto> GetAllUsers([FromQuery] GetAllUsersInputDto input)
         {
             try
             {

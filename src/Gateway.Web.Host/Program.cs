@@ -5,6 +5,7 @@ using Gateway.Web.Host.Protos.Homes;
 using Gateway.Web.Host.Protos.Devices;
 using Gateway.Core.Settings;
 using Gateway.Web.Host.Services;
+using Microsoft.OpenApi.Models;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -14,7 +15,33 @@ var configuration = builder.Configuration;
     IServiceCollection services = builder.Services;
 
     services.AddControllers();
-    services.AddSwaggerGen();
+    services.AddSwaggerGen(option =>
+    {
+        option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+        option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please enter a valid token",
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            Scheme = "Bearer"
+        });
+        option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+    });
 
     // add settings in appsettings.json
     services.Configure<MqttSettings>(configuration.GetSection("MqttSettings"));

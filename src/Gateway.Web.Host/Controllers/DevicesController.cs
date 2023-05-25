@@ -25,7 +25,7 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ResponseDto> GetAllDevices([FromBody] GetAllDevicesInputDto input)
+        public async Task<ResponseDto> GetAllDevices([FromQuery] GetAllDevicesInputDto input)
         {
             try
             {
