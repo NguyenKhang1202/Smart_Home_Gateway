@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+option csharp_namespace = "Gateway.Web.Host.Protos.Devices";
+
+package devices;
+ 
+service DeviceGrpc {
+  rpc GetAllDevices (GetAllDevicesRequest) returns (GetAllDevicesResponse);
+  rpc GetDeviceById (GetDeviceByIdRequest) returns (GetDeviceByIdResponse);
+  rpc CreateDevice (CreateDeviceRequest) returns (CreateDeviceResponse);
+  rpc UpdateDevice (UpdateDeviceRequest) returns (UpdateDeviceResponse);
+  rpc DeleteDevice (DeleteDeviceRequest) returns (DeleteDeviceResponse);
+}
+
+message PDevice {
+  string Id = 1;
+  string UserId = 2;
+  string DeviceCode = 3;
+  string Name = 4;
+  string Properties = 5;
+  int32 Type = 6;
+  string TenantId = 7;
+  string HomeDeviceId = 8;
+  string Producer = 9;
+  repeated string ImagesUrl = 10;
+  string CreatedAt = 11;
+  string UpdatedAt = 12;
+}
+
+message GetAllDevicesRequest {
+  int32 SkipCount = 1;
+  int32 MaxResultCount = 2;
+}
+
+message GetAllDevicesResponse {
+  repeated PDevice Items = 1;
+}
+
+message GetDeviceByIdRequest {
+  string Id = 1;
+}
+
+message GetDeviceByIdResponse {
+  PDevice Data = 1;
+}
+
+message CreateDeviceRequest {
+  string UserId = 1;
+  string DeviceCode = 2;
+  string Name = 3;
+  string Properties = 4;
+  int32 Type = 5;
+  string TenantId = 6;
+  string HomeDeviceId = 7;
+  string Producer = 8;
+  repeated string ImagesUrl = 9;
+}
+
+message CreateDeviceResponse {
+  bool Data = 1;
+}
+
+message UpdateDeviceRequest {
+  string Id = 1;
+  string DeviceCode = 2;
+  string Name = 3;
+  string Properties = 4;
+  repeated string ImagesUrl = 5;
+}
+
+message UpdateDeviceResponse {
+  bool Data = 1;
+}
+
+message DeleteDeviceRequest {
+  string Id = 1;
+}
+
+message DeleteDeviceResponse {
+  bool Data = 1;
+}

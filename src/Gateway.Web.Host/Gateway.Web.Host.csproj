@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <None Remove="Protos\authentication.proto" />
+    <None Remove="Protos\device.proto" />
     <None Remove="Protos\home.proto" />
     <None Remove="Protos\user.proto" />
   </ItemGroup>
@@ -21,6 +22,7 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.52.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
+    <PackageReference Include="MQTTnet" Version="4.2.0.706" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
   </ItemGroup>
@@ -32,6 +34,7 @@
 
   <ItemGroup>
     <Protobuf Include="Protos\authentication.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\device.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\home.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\user.proto" GrpcServices="Client" />
   </ItemGroup>

@@ -21,8 +21,8 @@ namespace Gateway.Web.Host.Helpers
                 return;
 
             // authorization
-            PUserInfo? user = (PUserInfo?)context.HttpContext.Items["User"];
-            if(user == null || (_roles.Any() && !_roles.Contains(user.Role)))
+            PUserInfo? userInfo = (PUserInfo?)context.HttpContext.Items["User"];
+            if(userInfo == null || (_roles.Any() && !_roles.Contains(userInfo.Role)))
             {
                 context.Result = new JsonResult(new { message = "Unauthorized" }) 
                     { StatusCode = StatusCodes.Status401Unauthorized };
