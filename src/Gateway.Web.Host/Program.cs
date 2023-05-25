@@ -53,4 +53,4 @@ WebApplication app = builder.Build();
     app.MapControllers();
 }
 
-app.Run("http://localhost:4000");
+app.Run("http://0.0.0.0:12000");
