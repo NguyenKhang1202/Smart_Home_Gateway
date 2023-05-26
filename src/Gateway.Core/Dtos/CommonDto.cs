@@ -5,6 +5,7 @@
         public object? Data { get; set; }
         public bool Success { get; set; }
         public string? Message { get; set; }
+        public int? TotalCount { get; set; } = null;
     }
 
     public class UserInfo

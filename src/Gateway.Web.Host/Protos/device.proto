@@ -23,17 +23,20 @@ message PDevice {
   string HomeDeviceId = 8;
   string Producer = 9;
   repeated string ImagesUrl = 10;
-  string CreatedAt = 11;
-  string UpdatedAt = 12;
+  string RoomId = 11;
+  string CreatedAt = 12;
+  string UpdatedAt = 13;
 }
 
 message GetAllDevicesRequest {
   int32 SkipCount = 1;
   int32 MaxResultCount = 2;
+  string HomeDeviceId = 3;
 }
 
 message GetAllDevicesResponse {
-  repeated PDevice Items = 1;
+  int32 TotalCount = 1;
+  repeated PDevice Items = 2;
 }
 
 message GetDeviceByIdRequest {
@@ -54,6 +57,7 @@ message CreateDeviceRequest {
   string HomeDeviceId = 7;
   string Producer = 8;
   repeated string ImagesUrl = 9;
+  string RoomId = 10;
 }
 
 message CreateDeviceResponse {

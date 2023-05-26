@@ -16,6 +16,7 @@ namespace Gateway.Web.Host.Mappers
                .ForMember(d => d.Name, s => s.MapFrom(i => i.Name ?? ""))
                .ForMember(d => d.Properties, s => s.MapFrom(i => i.Properties ?? ""))
                .ForMember(d => d.HomeDeviceId, s => s.MapFrom(i => i.HomeDeviceId ?? ""))
+               .ForMember(d => d.RoomId, s => s.MapFrom(i => i.RoomId ?? ""))
                .ForMember(d => d.Producer, s => s.MapFrom(i => i.Producer ?? ""))
                .ForMember(d => d.ImagesUrl, s => s.MapFrom(i => i.ImagesUrl ?? new List<string>()));
             CreateMap<UpdateDeviceInputDto, UpdateDeviceRequest>()

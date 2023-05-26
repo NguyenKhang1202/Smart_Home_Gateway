@@ -28,10 +28,12 @@ message PRoom {
 message GetAllRoomsRequest {
   int32 SkipCount = 1;
   int32 MaxResultCount = 2;
+  string HomeId = 3;
 }
 
 message GetAllRoomsResponse {
-  repeated PRoom Items = 1;
+  int32 TotalCount = 1;
+  repeated PRoom Items = 2;
 }
 
 message GetRoomByIdRequest {

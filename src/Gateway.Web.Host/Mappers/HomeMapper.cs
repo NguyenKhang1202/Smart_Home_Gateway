@@ -8,7 +8,8 @@ namespace Gateway.Web.Host.Mappers
     {
         public HomeMapper() 
         {
-            CreateMap<GetAllHomesInputDto, GetAllHomesRequest>();
+            CreateMap<GetAllHomesInputDto, GetAllHomesRequest>()
+                .ForMember(d => d.UserId, s => s.MapFrom(i => i.UserId ?? ""));
             CreateMap<CreateHomeInputDto, CreateHomeRequest>()
                .ForMember(d => d.TenantId, s => s.MapFrom(i => i.TenantId ?? ""))
                .ForMember(d => d.UserId, s => s.MapFrom(i => i.UserId ?? ""))

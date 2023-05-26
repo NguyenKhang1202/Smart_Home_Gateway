@@ -33,6 +33,7 @@ namespace Gateway.Web.Host.Controllers
                     _mapper.Map<GetAllUsersRequest>(input));
                 return new ResponseDto()
                 {
+                    TotalCount = response.TotalCount,
                     Data = response.Items,
                     Success = true,
                     Message = "Get users success"

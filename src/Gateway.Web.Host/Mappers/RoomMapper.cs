@@ -8,7 +8,8 @@ namespace Gateway.Web.Host.Mappers
     {
         public RoomMapper() 
         {
-            CreateMap<GetAllRoomsInputDto, GetAllRoomsRequest>();
+            CreateMap<GetAllRoomsInputDto, GetAllRoomsRequest>()
+                .ForMember(d => d.HomeId, s => s.MapFrom(i => i.HomeId ?? ""));
             CreateMap<CreateRoomInputDto, CreateRoomRequest>()
                .ForMember(d => d.TenantId, s => s.MapFrom(i => i.TenantId ?? ""))
                .ForMember(d => d.UserId, s => s.MapFrom(i => i.UserId ?? ""))

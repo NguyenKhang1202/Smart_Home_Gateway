@@ -28,10 +28,12 @@ message PHome {
 message GetAllHomesRequest {
   int32 SkipCount = 1;
   int32 MaxResultCount = 2;
+  string UserId = 3;
 }
 
 message GetAllHomesResponse {
-  repeated PHome Items = 1;
+  int32 TotalCount = 1;
+  repeated PHome Items = 2;
 }
 
 message GetHomeByIdRequest {

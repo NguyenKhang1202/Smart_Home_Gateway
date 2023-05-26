@@ -39,7 +39,8 @@ message GetAllUsersRequest {
 }
 
 message GetAllUsersResponse {
-  repeated PUser Items = 1;
+  int32 TotalCount = 1;
+  repeated PUser Items = 2;
 }
 
 message GetUserByIdRequest {
