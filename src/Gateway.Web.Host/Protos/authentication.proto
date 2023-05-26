@@ -20,8 +20,9 @@ message PUser {
   string Lastname = 7;
   string Role = 8;
   string TenantId = 9;
-  string CreatedAt = 10;
-  string UpdatedAt = 11;
+  repeated string FCMToken = 10;
+  string CreatedAt = 11;
+  string UpdatedAt = 12;
 }
 
 message PUserInfo {
@@ -38,6 +39,8 @@ message LoginRequest {
 
 message LoginResponse {
   string Token = 1;
+  string UserId = 2;
+  repeated string FCMToken = 3;
 }
 
 message RegisterRequest {

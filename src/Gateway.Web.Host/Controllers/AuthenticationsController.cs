@@ -28,7 +28,7 @@ namespace Gateway.Web.Host.Controllers
                 LoginResponse response = await _authenticationGrpcClient.LoginAsync(_mapper.Map<LoginRequest>(input));
                 return new ResponseDto()
                 {
-                    Data = response.Token,
+                    Data = response,
                     Success = true,
                     Message = "Login success!"
                 };
