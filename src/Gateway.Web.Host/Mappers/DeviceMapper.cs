@@ -8,7 +8,9 @@ namespace Gateway.Web.Host.Mappers
     {
         public DeviceMapper() 
         {
-            CreateMap<GetAllDevicesInputDto, GetAllDevicesRequest>();
+            CreateMap<GetAllDevicesInputDto, GetAllDevicesRequest>()
+                .ForMember(d => d.HomeDeviceId, s => s.MapFrom(i => i.HomeDeviceId ?? ""))
+                .ForMember(d => d.RoomId, s => s.MapFrom(i => i.RoomId ?? ""));
             CreateMap<CreateDeviceInputDto, CreateDeviceRequest>()
                .ForMember(d => d.TenantId, s => s.MapFrom(i => i.TenantId ?? ""))
                .ForMember(d => d.UserId, s => s.MapFrom(i => i.UserId ?? ""))

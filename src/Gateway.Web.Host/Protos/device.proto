@@ -32,6 +32,7 @@ message GetAllDevicesRequest {
   int32 SkipCount = 1;
   int32 MaxResultCount = 2;
   string HomeDeviceId = 3;
+  string RoomId = 4;
 }
 
 message GetAllDevicesResponse {
