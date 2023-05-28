@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Gateway.Core.Dtos.Users;
-using Gateway.Web.Host.Protos;
 using Gateway.Web.Host.Protos.Users;
 
 namespace Gateway.Web.Host.Mappers

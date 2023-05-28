@@ -7,6 +7,7 @@ namespace Gateway.Web.Host.Helpers
     public class MqttUtils
     {
         private readonly IConfiguration _configuration;
+        private readonly static string SubscribeChannel = "projects/smart_home/data";
         public MqttUtils(IConfiguration configuration) 
         {
             _configuration = configuration;
@@ -28,13 +29,13 @@ namespace Gateway.Web.Host.Helpers
             if (mqttClient.IsConnected)
             {
                 // subscribe
-                await mqttClient.SubscribeAsync("topic/test1");
+                await mqttClient.SubscribeAsync(SubscribeChannel);
 
                 // receive message
                 mqttClient.ApplicationMessageReceivedAsync += e =>
                 {
                     Console.WriteLine("Received application message.");
-                    var str = ConvertByteToString(e.ApplicationMessage.PayloadSegment);
+                    String str = ConvertByteToString(e.ApplicationMessage.PayloadSegment);
                     
                     Console.WriteLine(str);
                     return Task.CompletedTask;

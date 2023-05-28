@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Gateway.Core.Dtos;
-using Gateway.Core.Dtos.Devices;
 using Gateway.Core.Dtos.Gateways;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Devices;
@@ -12,11 +11,11 @@ namespace Gateway.Web.Host.Controllers
     [Authorize]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class DevicesController : ControllerBase
+    public class GatewaysController : ControllerBase
     {
         private readonly DeviceGrpc.DeviceGrpcClient _deviceGrpcClient;
         private readonly IMapper _mapper;
-        public DevicesController(
+        public GatewaysController(
             DeviceGrpc.DeviceGrpcClient deviceGrpcClient,
             IMapper mapper
             )
@@ -26,18 +25,18 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ResponseDto> GetAllDevices([FromQuery] GetAllDevicesInputDto input)
+        public async Task<ResponseDto> GetAllGateways([FromQuery] GetAllGatewaysInputDto input)
         {
             try
             {
-                GetAllDevicesResponse response = await _deviceGrpcClient.GetAllDevicesAsync(
-                    _mapper.Map<GetAllDevicesRequest>(input));
+                GetAllGatewaysResponse response = await _deviceGrpcClient.GetAllGatewaysAsync(
+                    _mapper.Map<GetAllGatewaysRequest>(input));
                 return new ResponseDto()
                 {
                     TotalCount = response.TotalCount,
                     Data = response.Items,
                     Success = true,
-                    Message = "Get devices success"
+                    Message = "Get gateways success"
                 };
             }
             catch (RpcException ex)
@@ -51,12 +50,12 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ResponseDto> GetDeviceById(string id)
+        public async Task<ResponseDto> GetGatewayById(string id)
         {
             try
             {
-                GetDeviceByIdResponse response = await _deviceGrpcClient.GetDeviceByIdAsync(
-                    new GetDeviceByIdRequest()
+                GetGatewayByIdResponse response = await _deviceGrpcClient.GetGatewayByIdAsync(
+                    new GetGatewayByIdRequest()
                     {
                         Id = id,
                     });
@@ -64,7 +63,7 @@ namespace Gateway.Web.Host.Controllers
                 {
                     Data = response.Data,
                     Success = true,
-                    Message = "Get device success"
+                    Message = "Get gateway success"
                 };
             }
             catch (RpcException ex)
@@ -77,12 +76,12 @@ namespace Gateway.Web.Host.Controllers
             }
         }
         [HttpGet("code/{deviceCode}")]
-        public async Task<ResponseDto> GetDeviceByCode(string deviceCode)
+        public async Task<ResponseDto> GetGatewayByCode(string deviceCode)
         {
             try
             {
-                GetDeviceByCodeResponse response = await _deviceGrpcClient.GetDeviceByCodeAsync(
-                    new GetDeviceByCodeRequest()
+                GetGatewayByCodeResponse response = await _deviceGrpcClient.GetGatewayByCodeAsync(
+                    new GetGatewayByCodeRequest()
                     {
                         DeviceCode = deviceCode,
                     });
@@ -90,7 +89,7 @@ namespace Gateway.Web.Host.Controllers
                 {
                     Data = response.Data,
                     Success = true,
-                    Message = "Get device success"
+                    Message = "Get gateway success"
                 };
             }
             catch (RpcException ex)
@@ -104,17 +103,17 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpPost("")]
-        public async Task<ResponseDto> CreateDevice([FromBody] CreateDeviceInputDto input)
+        public async Task<ResponseDto> CreateGateway([FromBody] CreateGatewayInputDto input)
         {
             try
             {
-                CreateDeviceResponse response = await _deviceGrpcClient.CreateDeviceAsync(
-                    _mapper.Map<CreateDeviceRequest>(input));
+                CreateGatewayResponse response = await _deviceGrpcClient.CreateGatewayAsync(
+                    _mapper.Map<CreateGatewayRequest>(input));
                 return new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
-                    Message = "Create device success"
+                    Message = "Create gateway success"
                 };
             }
             catch (RpcException ex)
@@ -128,41 +127,17 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ResponseDto> UpdateDevice(string id, [FromBody] UpdateDeviceInputDto input)
+        public async Task<ResponseDto> UpdateGateway(string id, [FromBody] UpdateGatewayInputDto input)
         {
             try
             {
-                UpdateDeviceResponse response = await _deviceGrpcClient.UpdateDeviceAsync(
-                    _mapper.Map<UpdateDeviceRequest>(input));
+                UpdateGatewayResponse response = await _deviceGrpcClient.UpdateGatewayAsync(
+                    _mapper.Map<UpdateGatewayRequest>(input));  
                 return new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
-                    Message = "Update device success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        [HttpPost("/control/{id}")]
-        public async Task<ResponseDto> ControlDevice(string id, [FromBody] ControlDeviceInputDto input)
-        {
-            try
-            {
-                ControlDeviceResponse response = await _deviceGrpcClient.ControlDeviceAsync(
-                    _mapper.Map<ControlDeviceRequest>(input));
-                return new ResponseDto()
-                {
-                    Data = response.Data,
-                    Success = true,
-                    Message = "Control device success"
+                    Message = "Update gateway success"
                 };
             }
             catch (RpcException ex)
@@ -176,12 +151,12 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ResponseDto> DeleteDevice(string id)
+        public async Task<ResponseDto> DeleteGateway(string id)
         {
             try
             {
-                DeleteDeviceResponse response = await _deviceGrpcClient.DeleteDeviceAsync(
-                    new DeleteDeviceRequest()
+                DeleteGatewayResponse response = await _deviceGrpcClient.DeleteGatewayAsync(
+                    new DeleteGatewayRequest()
                     {
                         Id = id
                     });
@@ -189,7 +164,7 @@ namespace Gateway.Web.Host.Controllers
                 {
                     Data = response.Data,
                     Success = true,
-                    Message = "Delete device success"
+                    Message = "Delete gateway success"
                 };
             }
             catch (RpcException ex)

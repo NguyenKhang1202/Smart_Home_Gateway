@@ -3,13 +3,25 @@ syntax = "proto3";
 option csharp_namespace = "Gateway.Web.Host.Protos.Devices";
 
 package devices;
- 
+
 service DeviceGrpc {
   rpc GetAllDevices (GetAllDevicesRequest) returns (GetAllDevicesResponse);
   rpc GetDeviceById (GetDeviceByIdRequest) returns (GetDeviceByIdResponse);
+  rpc GetDeviceByCode (GetDeviceByCodeRequest) returns (GetDeviceByCodeResponse);
   rpc CreateDevice (CreateDeviceRequest) returns (CreateDeviceResponse);
   rpc UpdateDevice (UpdateDeviceRequest) returns (UpdateDeviceResponse);
   rpc DeleteDevice (DeleteDeviceRequest) returns (DeleteDeviceResponse);
+
+  // Control
+  rpc ControlDevice (ControlDeviceRequest) returns (ControlDeviceResponse);
+
+  // Gateway
+  rpc GetAllGateways (GetAllGatewaysRequest) returns (GetAllGatewaysResponse);
+  rpc GetGatewayById (GetGatewayByIdRequest) returns (GetGatewayByIdResponse);
+  rpc GetGatewayByCode (GetGatewayByCodeRequest) returns (GetGatewayByCodeResponse);
+  rpc CreateGateway (CreateGatewayRequest) returns (CreateGatewayResponse);
+  rpc UpdateGateway (UpdateGatewayRequest) returns (UpdateGatewayResponse);
+  rpc DeleteGateway (DeleteGatewayRequest) returns (DeleteGatewayResponse);
 }
 
 message PDevice {
@@ -24,8 +36,18 @@ message PDevice {
   string Producer = 9;
   repeated string ImagesUrl = 10;
   string RoomId = 11;
-  string CreatedAt = 12;
-  string UpdatedAt = 13;
+  PControl Control = 12;
+  repeated int32 Data = 13;
+  string CreatedAt = 14;
+  string UpdatedAt = 15;
+}
+
+message PControl {
+  int32 Status = 1;
+  int32 Mode = 2;
+  int32 Direction = 3;
+  int32 Speed = 4;
+  int32 Intensity = 5;
 }
 
 message GetAllDevicesRequest {
@@ -48,6 +70,14 @@ message GetDeviceByIdResponse {
   PDevice Data = 1;
 }
 
+message GetDeviceByCodeRequest {
+  string DeviceCode = 1;
+}
+
+message GetDeviceByCodeResponse {
+  PDevice Data = 1;
+}
+
 message CreateDeviceRequest {
   string UserId = 1;
   string DeviceCode = 2;
@@ -62,6 +92,15 @@ message CreateDeviceRequest {
 }
 
 message CreateDeviceResponse {
+  bool Data = 1;
+}
+
+message ControlDeviceRequest {
+  string Id = 1;
+  PControl Control = 2;
+}
+
+message ControlDeviceResponse {
   bool Data = 1;
 }
 
@@ -82,5 +121,91 @@ message DeleteDeviceRequest {
 }
 
 message DeleteDeviceResponse {
+  bool Data = 1;
+}
+
+// Gateway
+message PGateway {
+  string Id = 1;
+  string Name = 2;
+  string DeviceCode = 3;
+  string UserName = 4;
+  string Password = 5;
+  string HomeId = 6;
+  int32 TenantId = 7;
+  string Key = 8;
+  string Ip = 9;
+  int32 Port = 10;
+  string CreatedAt = 11;
+  string UpdatedAt = 12;
+}
+
+message GetAllGatewaysRequest {
+  int32 SkipCount = 1;
+  int32 MaxResultCount = 2;
+  string HomeId = 3;
+}
+
+message GetAllGatewaysResponse {
+  int32 TotalCount = 1;
+  repeated PGateway Items = 2;
+}
+
+message GetGatewayByIdRequest {
+  string Id = 1;
+}
+
+message GetGatewayByIdResponse {
+  PGateway Data = 1;
+}
+
+message GetGatewayByCodeRequest {
+  string DeviceCode = 1;
+}
+
+message GetGatewayByCodeResponse {
+  PGateway Data = 1;
+}
+
+message CreateGatewayRequest {
+  string Name = 1;
+  string DeviceCode = 2;
+  string UserName = 3;
+  string Password = 4;
+  string HomeId = 5;
+  int32 TenantId = 6;
+  string Key = 7;
+  string Ip = 8;
+  int32 Port = 9;
+}
+
+message CreateGatewayResponse {
+  bool Data = 1;
+}
+
+message UpdateGatewayRequest {
+  string Id = 1;
+  string Name = 2;
+  string DeviceCode = 3;
+  string UserName = 4;
+  string Password = 5;
+  string HomeId = 6;
+  int32 TenantId = 7;
+  string Key = 8;
+  string Ip = 9;
+  int32 Port = 10;
+  string CreatedAt = 11;
+  string UpdatedAt = 12;
+}
+
+message UpdateGatewayResponse {
+  bool Data = 1;
+}
+
+message DeleteGatewayRequest {
+  string Id = 1;
+}
+
+message DeleteGatewayResponse {
   bool Data = 1;
 }
