@@ -7,13 +7,14 @@ using Gateway.Core.Settings;
 using Gateway.Web.Host.Services;
 using Microsoft.OpenApi.Models;
 using Gateway.Web.Host.Protos.Rooms;
+using Gateway.Web.Host.Protos.Notifications;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 // Add services to DI container.
+IServiceCollection services = builder.Services;
 {
-    IServiceCollection services = builder.Services;
 
     services.AddControllers();
     services.AddSwaggerGen(option =>
@@ -50,6 +51,7 @@ var configuration = builder.Configuration;
     // configure strongly typed settings object
     services.AddTransient<JwtMiddleware>();
     services.AddScoped<IMqttService, MqttService>();
+    services.AddSingleton<IFirebaseService, FirebaseService>();
 
     // add gRPC client
     services.AddGrpcClient<AuthenticationGrpc.AuthenticationGrpcClient>(o =>
@@ -72,12 +74,17 @@ var configuration = builder.Configuration;
     {
         o.Address = new Uri(configuration["Services:RoomServiceUrl"]);
     });
+    services.AddGrpcClient<NotificationGrpc.NotificationGrpcClient>(o =>
+    {
+        o.Address = new Uri(configuration["Services:NotificationServiceUrl"]);
+    });
 
     // add AutoMapper
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 }
 // subscribe and handle message 
-MqttUtils mqttUtils = new(configuration);
+DeviceGrpc.DeviceGrpcClient? deviceGrpcClient = services.BuildServiceProvider().GetService<DeviceGrpc.DeviceGrpcClient>();
+MqttUtils mqttUtils = new(configuration, deviceGrpcClient);
 mqttUtils.SubscribeAndHandleMessage();
 
 WebApplication app = builder.Build();

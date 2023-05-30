@@ -38,8 +38,9 @@ message PDevice {
   string RoomId = 11;
   PControl Control = 12;
   repeated int32 Data = 13;
-  string CreatedAt = 14;
-  string UpdatedAt = 15;
+  string GatewayCode = 14;
+  string CreatedAt = 15;
+  string UpdatedAt = 16;
 }
 
 message PControl {
@@ -89,6 +90,7 @@ message CreateDeviceRequest {
   string Producer = 8;
   repeated string ImagesUrl = 9;
   string RoomId = 10;
+  string GatewayCode = 11;
 }
 
 message CreateDeviceResponse {
@@ -110,6 +112,7 @@ message UpdateDeviceRequest {
   string Name = 3;
   string Properties = 4;
   repeated string ImagesUrl = 5;
+  string GatewayCode = 6;
 }
 
 message UpdateDeviceResponse {

@@ -13,6 +13,7 @@
     <None Remove="Protos\authentication.proto" />
     <None Remove="Protos\device.proto" />
     <None Remove="Protos\home.proto" />
+    <None Remove="Protos\notification.proto" />
     <None Remove="Protos\room.proto" />
     <None Remove="Protos\user.proto" />
   </ItemGroup>
@@ -20,15 +21,20 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="FirebaseAdmin" Version="2.3.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.52.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
     <PackageReference Include="MQTTnet" Version="4.2.0.706" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Gateway.Application.Shared\Gateway.Application.Shared.csproj" />
+    <ProjectReference Include="..\Gateway.Application\Gateway.Application.csproj" />
+    <ProjectReference Include="..\Gateway.Core.Shared\Gateway.Core.Shared.csproj" />
     <ProjectReference Include="..\Gateway.Core\Gateway.Core.csproj" />
     <ProjectReference Include="..\Gateway.EntityFrameworkCore\Gateway.EntityFrameworkCore.csproj" />
   </ItemGroup>
@@ -37,6 +43,7 @@
     <Protobuf Include="Protos\authentication.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\device.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\home.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\notification.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\room.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\user.proto" GrpcServices="Client" />
   </ItemGroup>

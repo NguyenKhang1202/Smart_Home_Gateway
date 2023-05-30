@@ -1,6 +1,9 @@
 ﻿using MQTTnet.Client;
 using MQTTnet;
 using MQTTnet.Server;
+using Newtonsoft.Json;
+using Gateway.Web.Host.Protos.Devices;
+using Gateway.Core.Settings;
 
 namespace Gateway.Web.Host.Helpers
 {
@@ -8,14 +11,18 @@ namespace Gateway.Web.Host.Helpers
     {
         private readonly IConfiguration _configuration;
         private readonly static string SubscribeChannel = "projects/smart_home/data";
-        public MqttUtils(IConfiguration configuration) 
+        private readonly DeviceGrpc.DeviceGrpcClient _deviceGrpcClient;
+        public MqttUtils(IConfiguration configuration,
+            DeviceGrpc.DeviceGrpcClient deviceGrpcClient) 
         {
             _configuration = configuration;
+            _deviceGrpcClient = deviceGrpcClient;
         }
 
         public async void SubscribeAndHandleMessage()
         {
             MqttFactory mqttFactory = new();
+            MqttDataReceive? data = new();
             IMqttClient mqttClient = mqttFactory.CreateMqttClient();
 
             MqttClientOptions options = new MqttClientOptionsBuilder()
@@ -34,10 +41,10 @@ namespace Gateway.Web.Host.Helpers
                 // receive message
                 mqttClient.ApplicationMessageReceivedAsync += e =>
                 {
-                    Console.WriteLine("Received application message.");
-                    String str = ConvertByteToString(e.ApplicationMessage.PayloadSegment);
-                    
-                    Console.WriteLine(str);
+                    string payload = ConvertByteToString(e.ApplicationMessage.PayloadSegment);
+                    data = JsonConvert.DeserializeObject<MqttDataReceive>(payload);
+
+                    Console.WriteLine(payload);
                     return Task.CompletedTask;
                 };
             }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Gateway.Core.Dtos.Devices;
 using Gateway.Core.Dtos.Gateways;
+using Gateway.Core.Entities;
 using Gateway.Web.Host.Protos.Devices;
 
 namespace Gateway.Web.Host.Mappers
@@ -20,6 +21,7 @@ namespace Gateway.Web.Host.Mappers
                .ForMember(d => d.Name, s => s.MapFrom(i => i.Name ?? ""))
                .ForMember(d => d.Properties, s => s.MapFrom(i => i.Properties ?? ""))
                .ForMember(d => d.HomeDeviceId, s => s.MapFrom(i => i.HomeDeviceId ?? ""))
+               .ForMember(d => d.GatewayCode, s => s.MapFrom(i => i.GatewayCode ?? ""))
                .ForMember(d => d.RoomId, s => s.MapFrom(i => i.RoomId ?? ""))
                .ForMember(d => d.Producer, s => s.MapFrom(i => i.Producer ?? ""))
                .ForMember(d => d.ImagesUrl, s => s.MapFrom(i => i.ImagesUrl ?? new List<string>()));
@@ -28,6 +30,7 @@ namespace Gateway.Web.Host.Mappers
                 .ForMember(d => d.DeviceCode, s => s.MapFrom(i => i.DeviceCode ?? ""))
                 .ForMember(d => d.Name, s => s.MapFrom(i => i.Name ?? ""))
                 .ForMember(d => d.Properties, s => s.MapFrom(i => i.Properties ?? ""))
+                .ForMember(d => d.GatewayCode, s => s.MapFrom(i => i.GatewayCode ?? ""))
                 .ForMember(d => d.ImagesUrl, s => s.MapFrom(i => i.ImagesUrl ?? new List<string>()));
 
             CreateMap<ControlDeviceInputDto, ControlDeviceRequest>()
@@ -40,6 +43,12 @@ namespace Gateway.Web.Host.Mappers
                     Speed = i.Control.Speed,
                     Intensity = i.Control.Intensity,
                 }));
+            CreateMap<PControl, ControlDevice>()
+                .ForMember(d => d.Status, s => s.MapFrom(i => i.Status))
+                .ForMember(d => d.Mode, s => s.MapFrom(i => i.Mode))
+                .ForMember(d => d.Direction, s => s.MapFrom(i => i.Direction))
+                .ForMember(d => d.Speed, s => s.MapFrom(i => i.Speed))
+                .ForMember(d => d.Intensity, s => s.MapFrom(i => i.Intensity));
 
             // Gateway
             CreateMap<GetAllGatewaysInputDto, GetAllGatewaysRequest>()

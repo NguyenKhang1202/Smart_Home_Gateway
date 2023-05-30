@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
+using Gateway.Application.Shared.Enums;
 using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Devices;
-using Gateway.Core.Dtos.Gateways;
+using Gateway.Core.Entities;
+using Gateway.Core.Settings;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Devices;
+using Gateway.Web.Host.Services;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Gateway.Web.Host.Controllers
 {
@@ -15,14 +19,17 @@ namespace Gateway.Web.Host.Controllers
     public class DevicesController : ControllerBase
     {
         private readonly DeviceGrpc.DeviceGrpcClient _deviceGrpcClient;
+        private readonly IMqttService _mqttService; 
         private readonly IMapper _mapper;
         public DevicesController(
             DeviceGrpc.DeviceGrpcClient deviceGrpcClient,
+            IMqttService mqttService,
             IMapper mapper
             )
         {
             _deviceGrpcClient = deviceGrpcClient;
             _mapper = mapper;
+            _mqttService = mqttService;
         }
 
         [HttpGet("")]
@@ -151,16 +158,31 @@ namespace Gateway.Web.Host.Controllers
             }
         }
 
-        [HttpPost("/control/{id}")]
+        [HttpPost("control/{id}")]
         public async Task<ResponseDto> ControlDevice(string id, [FromBody] ControlDeviceInputDto input)
         {
             try
             {
-                ControlDeviceResponse response = await _deviceGrpcClient.ControlDeviceAsync(
+                ControlDeviceResponse controlResponse = await _deviceGrpcClient.ControlDeviceAsync(
                     _mapper.Map<ControlDeviceRequest>(input));
+                if (controlResponse.Data == true)
+                {
+                    GetDeviceByIdResponse deviceResponse = await _deviceGrpcClient.GetDeviceByIdAsync(new GetDeviceByIdRequest()
+                    {
+                        Id = input.Id,
+                    });
+                    Payload payload = new()
+                    {
+                        GatewayCode = deviceResponse.Data.GatewayCode,
+                        DeviceCode = deviceResponse.Data.DeviceCode,
+                        Control = _mapper.Map<ControlDevice>(deviceResponse.Data.Control),
+                    };
+
+                    _mqttService.PublishMqtt(DeviceEnum.Topic_Control, JsonConvert.SerializeObject(payload));
+                }
                 return new ResponseDto()
                 {
-                    Data = response.Data,
+                    Data = controlResponse.Data,
                     Success = true,
                     Message = "Control device success"
                 };

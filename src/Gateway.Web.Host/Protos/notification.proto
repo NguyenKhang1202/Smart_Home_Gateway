@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+option csharp_namespace = "Gateway.Web.Host.Protos.Notifications";
+
+package notifications;
+ 
+service NotificationGrpc {
+  rpc GetAllNotifications (GetAllNotificationsRequest) returns (GetAllNotificationsResponse);
+  rpc GetNotificationById (GetNotificationByIdRequest) returns (GetNotificationByIdResponse);
+  rpc CreateNotification (CreateNotificationRequest) returns (CreateNotificationResponse);
+  rpc UpdateNotification (UpdateNotificationRequest) returns (UpdateNotificationResponse);
+  rpc UpdateStatusNotification (UpdateStatusNotificationRequest) returns (UpdateStatusNotificationResponse);
+  rpc DeleteNotification (DeleteNotificationRequest) returns (DeleteNotificationResponse);
+}
+
+message PNotification {
+  string Id = 1;
+  string UserId = 2;
+  string TenantId = 3;
+  string Title = 4;
+  string Content = 5;
+  int32 Status = 6;
+  string CreatedAt = 7;
+  string UpdatedAt = 8;
+}
+
+message GetAllNotificationsRequest {
+  int32 SkipCount = 1;
+  int32 MaxResultCount = 2;
+  string UserId = 3;
+}
+
+message GetAllNotificationsResponse {
+  int32 TotalCount = 1;
+  repeated PNotification Items = 2;
+}
+
+message GetNotificationByIdRequest {
+  string Id = 1;
+}
+
+message GetNotificationByIdResponse {
+  PNotification Data = 1;
+}
+
+message CreateNotificationRequest {
+  string UserId = 1;
+  string TenantId = 2;
+  string Title = 3;
+  string Content = 4;
+}
+
+message CreateNotificationResponse {
+  bool Data = 1;
+}
+
+message UpdateStatusNotificationRequest {
+  string Id = 1;
+  int32 CurrentStatus = 2;
+  int32 UpdateStatus = 3;
+}
+
+message UpdateStatusNotificationResponse {
+  bool Data = 1;
+}
+
+message UpdateNotificationRequest {
+  string Id = 1;
+  string Title = 2;
+  string Content = 3;
+}
+
+message UpdateNotificationResponse {
+  bool Data = 1;
+}
+
+message DeleteNotificationRequest {
+  string Id = 1;
+}
+
+message DeleteNotificationResponse {
+  bool Data = 1;
+}
