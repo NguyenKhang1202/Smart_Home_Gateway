@@ -8,4 +8,16 @@
         public int Speed { get; set; }
         public int Intensity { get; set; }
     }
+
+    public enum STATUS
+    {
+        ON = 1,
+        OFF = 2,
+    }
+
+    public enum MODE
+    {
+        AUTO = 1,
+        MANUAL = 2,
+    }
 }

@@ -8,14 +8,12 @@ using Gateway.Web.Host.Protos.Notifications;
 using static Gateway.Application.Shared.Enums.DeviceEnum;
 using Gateway.Web.Host.Services;
 using Gateway.Web.Host.Protos.Users;
-using static Gateway.Web.Host.Protos.Users.UserGrpc;
 
 namespace Gateway.Web.Host.Helpers
 {
     public class MqttUtils
     {
         private readonly IConfiguration _configuration;
-        private readonly static string SubscribeChannel = "projects/smart_home/data";
         private readonly DeviceGrpc.DeviceGrpcClient _deviceGrpcClient;
         private readonly NotificationGrpc.NotificationGrpcClient _notificationGrpcClient;
         private readonly UserGrpc.UserGrpcClient _userGrpcClient;
@@ -50,7 +48,7 @@ namespace Gateway.Web.Host.Helpers
             if (mqttClient.IsConnected)
             {
                 // subscribe
-                await mqttClient.SubscribeAsync(SubscribeChannel);
+                await mqttClient.SubscribeAsync(TOPIC_DATA);
 
                 // receive message
                 mqttClient.ApplicationMessageReceivedAsync += e =>
@@ -93,7 +91,7 @@ namespace Gateway.Web.Host.Helpers
         {
             try
             {
-                string userId = await GetUserId(data.Code);
+                string userId = await GetUserId(data.DeviceCode);
                 PUser user = await GetUserAsync(userId);
                 List<int> listData = new();
                 switch (data.Type)
@@ -118,7 +116,7 @@ namespace Gateway.Web.Host.Helpers
                         listData.Add((int)data.Value!);
                         await _deviceGrpcClient.UpdateDataDeviceAsync(new UpdateDataDeviceRequest()
                         {
-                            DeviceCode = data.Code,
+                            DeviceCode = data.DeviceCode,
                             Data = { listData }
                         });
                         break;
@@ -127,7 +125,7 @@ namespace Gateway.Web.Host.Helpers
                         listData.Add((int)data.Temperature!);
                         await _deviceGrpcClient.UpdateDataDeviceAsync(new UpdateDataDeviceRequest()
                         {
-                            DeviceCode = data.Code,
+                            DeviceCode = data.DeviceCode,
                             Data = { listData }
                         });
                         break;

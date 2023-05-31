@@ -14,6 +14,7 @@
             GATEWAY = 100,
         }
 
-        public static string Topic_Control = "projects/smart_home/control";
+        public static string TOPIC_CONTROL = "projects/smart_home/control";
+        public static string TOPIC_DATA = "projects/smart_home/data";
     }
 }

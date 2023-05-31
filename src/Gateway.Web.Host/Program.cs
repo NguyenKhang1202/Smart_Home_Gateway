@@ -87,7 +87,6 @@ var firebaseService = services.BuildServiceProvider().GetService<IFirebaseServic
 var deviceGrpcClient = services.BuildServiceProvider().GetService<DeviceGrpc.DeviceGrpcClient>();
 var notificationGrpcClient = services.BuildServiceProvider().GetService<NotificationGrpc.NotificationGrpcClient>();
 var userGrpcClient = services.BuildServiceProvider().GetService<UserGrpc.UserGrpcClient>();
-// var appSession = services.BuildServiceProvider().GetService<IAppSession>();
 MqttUtils mqttUtils = new(configuration, userGrpcClient, firebaseService, deviceGrpcClient, notificationGrpcClient);
 mqttUtils.SubscribeAndHandleMessage();
 

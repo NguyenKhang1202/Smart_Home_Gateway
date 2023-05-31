@@ -178,7 +178,7 @@ namespace Gateway.Web.Host.Controllers
                         Control = _mapper.Map<ControlDevice>(deviceResponse.Data.Control),
                     };
 
-                    _mqttService.PublishMqtt(DeviceEnum.Topic_Control, JsonConvert.SerializeObject(payload));
+                    _mqttService.PublishMqtt(DeviceEnum.TOPIC_CONTROL, JsonConvert.SerializeObject(payload));
                 }
                 return new ResponseDto()
                 {
