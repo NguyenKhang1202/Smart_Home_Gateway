@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Web.Host.Controllers
 {
-    [Authorize("ADMIN")]
+    [Authorize]
     [Route("api/v1/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase

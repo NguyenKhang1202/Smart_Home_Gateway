@@ -10,6 +10,7 @@ service DeviceGrpc {
   rpc GetDeviceByCode (GetDeviceByCodeRequest) returns (GetDeviceByCodeResponse);
   rpc CreateDevice (CreateDeviceRequest) returns (CreateDeviceResponse);
   rpc UpdateDevice (UpdateDeviceRequest) returns (UpdateDeviceResponse);
+  rpc UpdateDataDevice (UpdateDataDeviceRequest) returns (UpdateDataDeviceResponse);
   rpc DeleteDevice (DeleteDeviceRequest) returns (DeleteDeviceResponse);
 
   // Control
@@ -103,6 +104,15 @@ message ControlDeviceRequest {
 }
 
 message ControlDeviceResponse {
+  bool Data = 1;
+}
+
+message UpdateDataDeviceRequest {
+  string DeviceCode = 1;
+  repeated int32 Data = 2;
+}
+
+message UpdateDataDeviceResponse {
   bool Data = 1;
 }
 

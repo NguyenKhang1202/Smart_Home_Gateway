@@ -83,8 +83,12 @@ IServiceCollection services = builder.Services;
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 }
 // subscribe and handle message 
-DeviceGrpc.DeviceGrpcClient? deviceGrpcClient = services.BuildServiceProvider().GetService<DeviceGrpc.DeviceGrpcClient>();
-MqttUtils mqttUtils = new(configuration, deviceGrpcClient);
+var firebaseService = services.BuildServiceProvider().GetService<IFirebaseService>();
+var deviceGrpcClient = services.BuildServiceProvider().GetService<DeviceGrpc.DeviceGrpcClient>();
+var notificationGrpcClient = services.BuildServiceProvider().GetService<NotificationGrpc.NotificationGrpcClient>();
+var userGrpcClient = services.BuildServiceProvider().GetService<UserGrpc.UserGrpcClient>();
+// var appSession = services.BuildServiceProvider().GetService<IAppSession>();
+MqttUtils mqttUtils = new(configuration, userGrpcClient, firebaseService, deviceGrpcClient, notificationGrpcClient);
 mqttUtils.SubscribeAndHandleMessage();
 
 WebApplication app = builder.Build();

@@ -6,7 +6,7 @@ namespace Gateway.Web.Host.Services
 {
     public interface IFirebaseService
     {
-        Task<string> SendFcmMessage(Message message);
+        Task<string> SendNotification(string Token, string Title, string Body);
     }
     public class FirebaseService : IFirebaseService
     {
@@ -16,16 +16,28 @@ namespace Gateway.Web.Host.Services
         {
             _app = FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile("src/Gateway.Web.Host/Services/notification-smart-social-firebase-adminsdk-3h5yi-26540eff7d.json"),
+                Credential = GoogleCredential.FromFile("Services/notification-smart-social-firebase-adminsdk-3h5yi-26540eff7d.json"),
             });
             _firebaseMessagingInstance = FirebaseMessaging.GetMessaging(_app);
         }
-
-        public async Task<string> SendFcmMessage(Message message)
+        private Message CreateNotification(string title, string notificationBody, string token)
+        {
+            return new Message()
+            {
+                Token = token,
+                Notification = new Notification()
+                {
+                    Body = notificationBody,
+                    Title = title
+                }
+            };
+        }
+        public async Task<string> SendNotification(string Token, string Title, string Body)
         {
             try
             {
-                string messageId = await _firebaseMessagingInstance.SendAsync(message).ConfigureAwait(false);
+                string messageId = await _firebaseMessagingInstance
+                    .SendAsync(CreateNotification(Title, Body, Token)).ConfigureAwait(false);
                 return messageId;
             } catch (Exception ex)
             {

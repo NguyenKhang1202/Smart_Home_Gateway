@@ -21,10 +21,10 @@ namespace Gateway.Core.Settings
     public class MqttDataReceive
     {
         public string Name { get; set; }
-        public bool? Bool_value { get; set; }
+        public int? Value { get; set; }
         public string Code { get; set; }  // Device Code
         public int Type { get; set; }
-        public string? Humidity { get; set; }
-        public string? Temperature { get; set; }
+        public int? Humidity { get; set; }
+        public int? Temperature { get; set; }
     }
 }
