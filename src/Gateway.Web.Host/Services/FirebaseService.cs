@@ -16,7 +16,7 @@ namespace Gateway.Web.Host.Services
         {
             _app = FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile("Services/notification-smart-social-firebase-adminsdk-3h5yi-26540eff7d.json"),
+                Credential = GoogleCredential.FromFile("Services/fire-alarm-system-c6a01-firebase-adminsdk-yxd76-4fbc8e1a08.json"),
             });
             _firebaseMessagingInstance = FirebaseMessaging.GetMessaging(_app);
         }
