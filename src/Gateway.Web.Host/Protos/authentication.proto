@@ -8,6 +8,7 @@ service AuthenticationGrpc {
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc Register(RegisterRequest) returns (RegisterResponse);
   rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
 }
 
 message PUser {
@@ -38,9 +39,10 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  string Token = 1;
-  string UserId = 2;
-  repeated string FCMToken = 3;
+  string RefreshToken = 1;
+  string AccessToken = 2;
+  string UserId = 3;
+  repeated string FCMToken = 4;
 }
 
 message RegisterRequest {
@@ -56,6 +58,15 @@ message RegisterRequest {
 
 message RegisterResponse {
   bool Data = 1;
+}
+
+message RefreshTokenRequest {
+  string RefreshToken = 1;
+  string UserId = 2;
+}
+
+message RefreshTokenResponse {
+  string AccessToken = 1;
 }
 
 message ValidateTokenRequest {

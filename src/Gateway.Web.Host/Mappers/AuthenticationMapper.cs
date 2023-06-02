@@ -15,6 +15,10 @@ namespace Gateway.Web.Host.Mappers
             // Register
             CreateMap<RegisterInputDto, RegisterRequest>()
                 .ForMember(d => d.PhoneNumber, s => s.MapFrom(i => i.PhoneNumber ?? ""));
+
+            // Refresh token 
+            CreateMap<RefreshTokenInputDto, RefreshTokenRequest>()
+                .ForMember(d => d.RefreshToken, s => s.MapFrom(i => i.RefreshToken ?? ""));
         }
 
     }

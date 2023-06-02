@@ -8,6 +8,7 @@ using Gateway.Web.Host.Services;
 using Microsoft.OpenApi.Models;
 using Gateway.Web.Host.Protos.Rooms;
 using Gateway.Web.Host.Protos.Notifications;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -49,6 +50,7 @@ IServiceCollection services = builder.Services;
     services.Configure<MqttSettings>(configuration.GetSection("MqttSettings"));
 
     // configure strongly typed settings object
+    services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     services.AddTransient<JwtMiddleware>();
     services.AddScoped<IMqttService, MqttService>();
     services.AddSingleton<IFirebaseService, FirebaseService>();
