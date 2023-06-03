@@ -16,7 +16,6 @@ namespace Gateway.Web.Host.Mappers
                 .ForMember(d => d.RoomId, s => s.MapFrom(i => i.RoomId ?? ""));
             CreateMap<CreateDeviceInputDto, CreateDeviceRequest>()
                .ForMember(d => d.TenantId, s => s.MapFrom(i => i.TenantId ?? ""))
-               .ForMember(d => d.UserId, s => s.MapFrom(i => i.UserId ?? ""))
                .ForMember(d => d.DeviceCode, s => s.MapFrom(i => i.DeviceCode ?? ""))
                .ForMember(d => d.Name, s => s.MapFrom(i => i.Name ?? ""))
                .ForMember(d => d.Properties, s => s.MapFrom(i => i.Properties ?? ""))

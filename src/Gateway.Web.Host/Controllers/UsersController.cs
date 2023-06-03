@@ -15,16 +15,16 @@ namespace Gateway.Web.Host.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserGrpc.UserGrpcClient _userGrpcClient;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAppSession _appSession;
         private readonly IMapper _mapper;
         public UsersController(
             UserGrpc.UserGrpcClient userGrpcClient,
-            IHttpContextAccessor httpContextAccessor,
+            IAppSession appSession,
             IMapper mapper
             ) 
         {
             _userGrpcClient = userGrpcClient;
-            _httpContextAccessor = httpContextAccessor;
+            _appSession = appSession;
             _mapper = mapper;
         }
 
@@ -109,11 +109,9 @@ namespace Gateway.Web.Host.Controllers
         {
             try
             {
-                PUserInfo? user = (PUserInfo)_httpContextAccessor.HttpContext.Items["User"]
-                    ?? throw new Exception("Unauthorization");
                 SaveFcmTokenRequest request = new()
                 {
-                    UserId = user.UserId,
+                    UserId = _appSession.GetUserId(),
                     FCMToken = input.FcmToken ?? "",
                 };
                 SaveFcmTokenResponse response = await _userGrpcClient.SaveFcmTokenAsync(request);

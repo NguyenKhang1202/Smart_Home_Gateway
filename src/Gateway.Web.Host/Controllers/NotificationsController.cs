@@ -14,13 +14,16 @@ namespace Gateway.Web.Host.Controllers
     public class NotificationsController : ControllerBase
     {
         private readonly NotificationGrpc.NotificationGrpcClient _notificationGrpcClient;
+        private readonly IAppSession _appSession;
         private readonly IMapper _mapper;
         public NotificationsController(
             NotificationGrpc.NotificationGrpcClient notificationGrpcClient,
+            IAppSession appSession,
             IMapper mapper
             ) 
         {
             _notificationGrpcClient = notificationGrpcClient;
+            _appSession = appSession;
             _mapper = mapper;
         }
 
@@ -29,8 +32,9 @@ namespace Gateway.Web.Host.Controllers
         {
             try
             {
-                GetAllNotificationsResponse response = await _notificationGrpcClient.GetAllNotificationsAsync(
-                    _mapper.Map<GetAllNotificationsRequest>(input));
+                GetAllNotificationsRequest request = _mapper.Map<GetAllNotificationsRequest>(input);
+                request.UserId = _appSession.GetUserId();
+                GetAllNotificationsResponse response = await _notificationGrpcClient.GetAllNotificationsAsync(request);
                 return new ResponseDto()
                 {
                     TotalCount = response.TotalCount,
@@ -81,8 +85,9 @@ namespace Gateway.Web.Host.Controllers
         {
             try
             {
-                CreateNotificationResponse response = await _notificationGrpcClient.CreateNotificationAsync(
-                    _mapper.Map<CreateNotificationRequest>(input));
+                CreateNotificationRequest request = _mapper.Map<CreateNotificationRequest>(input);
+                request.UserId = _appSession.GetUserId();
+                CreateNotificationResponse response = await _notificationGrpcClient.CreateNotificationAsync(request);
                 return new ResponseDto()
                 {
                     Data = response.Data,

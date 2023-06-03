@@ -3,7 +3,6 @@
     public class CreateDeviceInputDto
     {
         public string TenantId { get; set; }
-        public string UserId { get; set; }
         public string? DeviceCode { get; set; }
         public string? Name { get; set; }
         public int Type { get; set; }

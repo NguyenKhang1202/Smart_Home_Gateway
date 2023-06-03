@@ -14,13 +14,16 @@ namespace Gateway.Web.Host.Controllers
     public class GatewaysController : ControllerBase
     {
         private readonly DeviceGrpc.DeviceGrpcClient _deviceGrpcClient;
+        private readonly IAppSession _appSession;
         private readonly IMapper _mapper;
         public GatewaysController(
             DeviceGrpc.DeviceGrpcClient deviceGrpcClient,
+            IAppSession appSession,
             IMapper mapper
             )
         {
             _deviceGrpcClient = deviceGrpcClient;
+            _appSession = appSession;
             _mapper = mapper;
         }
 

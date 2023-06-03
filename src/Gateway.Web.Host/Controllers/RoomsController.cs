@@ -14,13 +14,16 @@ namespace Gateway.Web.Host.Controllers
     public class RoomsController : ControllerBase
     {
         private readonly RoomGrpc.RoomGrpcClient _roomGrpcClient;
+        private readonly IAppSession _appSession;
         private readonly IMapper _mapper;
         public RoomsController(
             RoomGrpc.RoomGrpcClient roomGrpcClient,
+            IAppSession appSession,
             IMapper mapper
             )
         {
             _roomGrpcClient = roomGrpcClient;
+            _appSession = appSession;
             _mapper = mapper;
         }
 
@@ -81,8 +84,9 @@ namespace Gateway.Web.Host.Controllers
         {
             try
             {
-                CreateRoomResponse response = await _roomGrpcClient.CreateRoomAsync(
-                    _mapper.Map<CreateRoomRequest>(input));
+                CreateRoomRequest request = _mapper.Map<CreateRoomRequest>(input);
+                request.UserId = _appSession.GetUserId();
+                CreateRoomResponse response = await _roomGrpcClient.CreateRoomAsync(request);
                 return new ResponseDto()
                 {
                     Data = response.Data,

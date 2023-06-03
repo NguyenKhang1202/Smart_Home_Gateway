@@ -54,6 +54,7 @@ IServiceCollection services = builder.Services;
     services.AddTransient<JwtMiddleware>();
     services.AddScoped<IMqttService, MqttService>();
     services.AddSingleton<IFirebaseService, FirebaseService>();
+    services.AddSingleton<IAppSession, AppSession>();
 
     // add gRPC client
     services.AddGrpcClient<AuthenticationGrpc.AuthenticationGrpcClient>(o =>

@@ -19,15 +19,18 @@ namespace Gateway.Web.Host.Controllers
     public class DevicesController : ControllerBase
     {
         private readonly DeviceGrpc.DeviceGrpcClient _deviceGrpcClient;
+        private readonly IAppSession _appSession;
         private readonly IMqttService _mqttService; 
         private readonly IMapper _mapper;
         public DevicesController(
             DeviceGrpc.DeviceGrpcClient deviceGrpcClient,
+            IAppSession appSession,
             IMqttService mqttService,
             IMapper mapper
             )
         {
             _deviceGrpcClient = deviceGrpcClient;
+            _appSession = appSession;
             _mapper = mapper;
             _mqttService = mqttService;
         }
@@ -115,8 +118,9 @@ namespace Gateway.Web.Host.Controllers
         {
             try
             {
-                CreateDeviceResponse response = await _deviceGrpcClient.CreateDeviceAsync(
-                    _mapper.Map<CreateDeviceRequest>(input));
+                CreateDeviceRequest request = _mapper.Map<CreateDeviceRequest>(input);
+                request.UserId = _appSession.GetUserId();
+                CreateDeviceResponse response = await _deviceGrpcClient.CreateDeviceAsync(request);
                 return new ResponseDto()
                 {
                     Data = response.Data,

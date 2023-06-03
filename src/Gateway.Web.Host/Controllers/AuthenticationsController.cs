@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using FirebaseAdmin.Auth;
 using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Authentications;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Authentications;
-using Google.Apis.Auth.OAuth2.Requests;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Gateway.Web.Host.Controllers
 {
@@ -16,15 +13,15 @@ namespace Gateway.Web.Host.Controllers
     public class AuthenticationsController : ControllerBase
     {
         private readonly AuthenticationGrpc.AuthenticationGrpcClient _authenticationGrpcClient;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAppSession _appSession;
         private readonly IMapper _mapper;
         public AuthenticationsController(
             AuthenticationGrpc.AuthenticationGrpcClient authenticationGrpcClient,
-            IHttpContextAccessor httpContextAccessor,
+            IAppSession appSession,
             IMapper mapper) 
         {
             _authenticationGrpcClient = authenticationGrpcClient;
-            _httpContextAccessor = httpContextAccessor;
+            _appSession = appSession;
             _mapper = mapper;
         }
         [HttpPost("login")]
@@ -78,12 +75,10 @@ namespace Gateway.Web.Host.Controllers
         {
             try
             {
-                PUserInfo? user = (PUserInfo)_httpContextAccessor.HttpContext.Items["User"] 
-                    ?? throw new Exception("Unauthorization");
                 Protos.Authentications.RefreshTokenRequest request = new()
                 {
                     RefreshToken = input.RefreshToken,
-                    UserId = user.UserId,
+                    UserId = _appSession.GetUserId(),
                 };
                 RefreshTokenResponse response = await _authenticationGrpcClient.RefreshTokenAsync(request);
                 return new ResponseDto()
@@ -108,11 +103,9 @@ namespace Gateway.Web.Host.Controllers
         {
             try
             {
-                PUserInfo? user = (PUserInfo)_httpContextAccessor.HttpContext.Items["User"]
-                    ?? throw new Exception("Unauthorization");
                 LogoutRequest request = new()
                 {
-                    UserId = user.UserId,
+                    UserId = _appSession.GetUserId(),
                     FCMToken = input.FcmToken ?? "",
                 };
                 LogoutResponse response = await _authenticationGrpcClient.LogoutAsync(request);

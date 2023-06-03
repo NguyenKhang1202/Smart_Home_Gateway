@@ -2,6 +2,7 @@
 using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Homes;
 using Gateway.Web.Host.Helpers;
+using Gateway.Web.Host.Protos.Authentications;
 using Gateway.Web.Host.Protos.Homes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +15,16 @@ namespace Gateway.Web.Host.Controllers
     public class HomesController : ControllerBase
     {
         private readonly HomeGrpc.HomeGrpcClient _homeGrpcClient;
+        private readonly IAppSession _appSession;
         private readonly IMapper _mapper;
         public HomesController(
             HomeGrpc.HomeGrpcClient homeGrpcClient,
+            IAppSession appSession,
             IMapper mapper
             ) 
         {
             _homeGrpcClient = homeGrpcClient;
+            _appSession = appSession;
             _mapper = mapper;
         }
 
@@ -29,8 +33,9 @@ namespace Gateway.Web.Host.Controllers
         {
             try
             {
-                GetAllHomesResponse response = await _homeGrpcClient.GetAllHomesAsync(
-                    _mapper.Map<GetAllHomesRequest>(input));
+                GetAllHomesRequest request = _mapper.Map<GetAllHomesRequest>(input);
+                request.UserId = _appSession.GetUserId();
+                GetAllHomesResponse response = await _homeGrpcClient.GetAllHomesAsync(request);
                 return new ResponseDto()
                 {
                     TotalCount = response.TotalCount,
@@ -81,8 +86,9 @@ namespace Gateway.Web.Host.Controllers
         {
             try
             {
-                CreateHomeResponse response = await _homeGrpcClient.CreateHomeAsync(
-                    _mapper.Map<CreateHomeRequest>(input));
+                CreateHomeRequest request = _mapper.Map<CreateHomeRequest>(input);
+                request.UserId = _appSession.GetUserId();
+                CreateHomeResponse response = await _homeGrpcClient.CreateHomeAsync(request);
                 return new ResponseDto()
                 {
                     Data = response.Data,
