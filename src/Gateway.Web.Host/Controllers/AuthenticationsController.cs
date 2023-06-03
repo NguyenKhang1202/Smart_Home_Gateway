@@ -2,6 +2,7 @@
 using FirebaseAdmin.Auth;
 using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Authentications;
+using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Authentications;
 using Google.Apis.Auth.OAuth2.Requests;
 using Grpc.Core;
@@ -71,6 +72,7 @@ namespace Gateway.Web.Host.Controllers
                 throw new Exception(ex.Message);
             }
         }
+        [Authorize]
         [HttpPost("refreshToken")]
         public async Task<ResponseDto> RefreshToken([FromBody] RefreshTokenInputDto input)
         {
@@ -89,6 +91,36 @@ namespace Gateway.Web.Host.Controllers
                     Data = response,
                     Success = true,
                     Message = "Refresh token success!"
+                };
+            }
+            catch (RpcException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<ResponseDto> Logout([FromBody] LogoutInputDto input)
+        {
+            try
+            {
+                PUserInfo? user = (PUserInfo)_httpContextAccessor.HttpContext.Items["User"]
+                    ?? throw new Exception("Unauthorization");
+                LogoutRequest request = new()
+                {
+                    UserId = user.UserId,
+                    FCMToken = input.FcmToken ?? "",
+                };
+                LogoutResponse response = await _authenticationGrpcClient.LogoutAsync(request);
+                return new ResponseDto()
+                {
+                    Data = response,
+                    Success = true,
+                    Message = "Logout success!"
                 };
             }
             catch (RpcException ex)
