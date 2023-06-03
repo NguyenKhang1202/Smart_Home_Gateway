@@ -14,6 +14,8 @@ namespace Gateway.Web.Host.Mappers
                 .ForMember(d => d.PhoneNumber, s => s.MapFrom(i => i.PhoneNumber ?? ""))
                 .ForMember(d => d.Firstname, s => s.MapFrom(i => i.Firstname ?? ""))
                 .ForMember(d => d.Lastname, s => s.MapFrom(i => i.Lastname ?? ""));
+            CreateMap<SaveFcmTokenInputDto, SaveFcmTokenRequest>()
+               .ForMember(d => d.FCMToken, s => s.MapFrom(i => i.FcmToken ?? ""));
         }
     }
 }

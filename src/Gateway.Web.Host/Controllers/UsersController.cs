@@ -2,6 +2,7 @@
 using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Users;
 using Gateway.Web.Host.Helpers;
+using Gateway.Web.Host.Protos.Authentications;
 using Gateway.Web.Host.Protos.Users;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +15,16 @@ namespace Gateway.Web.Host.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserGrpc.UserGrpcClient _userGrpcClient;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         public UsersController(
             UserGrpc.UserGrpcClient userGrpcClient,
+            IHttpContextAccessor httpContextAccessor,
             IMapper mapper
             ) 
         {
             _userGrpcClient = userGrpcClient;
+            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
 
@@ -88,6 +92,36 @@ namespace Gateway.Web.Host.Controllers
                     Data = response.Data,
                     Success = true,
                     Message = "Update user success"
+                };
+            }
+            catch (RpcException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpPost("fcmToken")]
+        public async Task<ResponseDto> SaveFcmToken([FromBody] SaveFcmTokenInputDto input)
+        {
+            try
+            {
+                PUserInfo? user = (PUserInfo)_httpContextAccessor.HttpContext.Items["User"]
+                    ?? throw new Exception("Unauthorization");
+                SaveFcmTokenRequest request = new()
+                {
+                    UserId = user.UserId,
+                    FCMToken = input.FcmToken ?? "",
+                };
+                SaveFcmTokenResponse response = await _userGrpcClient.SaveFcmTokenAsync(request);
+                return new ResponseDto()
+                {
+                    Data = response.Data,
+                    Success = true,
+                    Message = "Save FcmToken success"
                 };
             }
             catch (RpcException ex)
