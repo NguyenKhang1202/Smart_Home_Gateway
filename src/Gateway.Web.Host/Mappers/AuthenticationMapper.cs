@@ -19,6 +19,11 @@ namespace Gateway.Web.Host.Mappers
             // Refresh token 
             CreateMap<RefreshTokenInputDto, RefreshTokenRequest>()
                 .ForMember(d => d.RefreshToken, s => s.MapFrom(i => i.RefreshToken ?? ""));
+
+            // Change password
+            CreateMap<ChangePasswordInputDto, ChangePasswordRequest>()
+                .ForMember(d => d.OldPassword, s => s.MapFrom(i => i.OldPassword ?? ""))
+                .ForMember(d => d.NewPassword, s => s.MapFrom(i => i.NewPassword ?? ""));
         }
 
     }

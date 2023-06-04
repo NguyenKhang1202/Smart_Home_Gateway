@@ -5,6 +5,7 @@ using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Authentications;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
+using static Gateway.Web.Host.Protos.Users.UserGrpc;
 
 namespace Gateway.Web.Host.Controllers
 {
@@ -114,6 +115,31 @@ namespace Gateway.Web.Host.Controllers
                     Data = response,
                     Success = true,
                     Message = "Logout success!"
+                };
+            }
+            catch (RpcException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<ResponseDto> ChangePassword([FromBody] ChangePasswordInputDto input)
+        {
+            try
+            {
+                ChangePasswordRequest request = _mapper.Map<ChangePasswordRequest>(input);
+                request.UserId = _appSession.GetUserId();
+                ChangePasswordResponse response = await _authenticationGrpcClient.ChangePasswordAsync(request);
+                return new ResponseDto()
+                {
+                    Data = response.Data,
+                    Success = true,
+                    Message = "Change password success"
                 };
             }
             catch (RpcException ex)

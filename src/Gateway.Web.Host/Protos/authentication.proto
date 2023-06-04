@@ -10,6 +10,9 @@ service AuthenticationGrpc {
   rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
   rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
   rpc Logout(LogoutRequest) returns (LogoutResponse);
+
+  // User
+  rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse);
 }
 
 message PUser {
@@ -84,5 +87,15 @@ message LogoutRequest {
 }
 
 message LogoutResponse {
+  bool Data = 1;
+}
+
+message ChangePasswordRequest {
+  string UserId = 1;
+  string OldPassword = 2;
+  string NewPassword = 3;
+}
+
+message ChangePasswordResponse {
   bool Data = 1;
 }
