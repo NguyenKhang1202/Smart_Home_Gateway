@@ -3,9 +3,7 @@ using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Authentications;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Authentications;
-using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
-using static Gateway.Web.Host.Protos.Users.UserGrpc;
 
 namespace Gateway.Web.Host.Controllers
 {
@@ -38,13 +36,14 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Login success!"
                 };
             }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
-            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Login fail"
+                };
             }
         }
 
@@ -61,13 +60,14 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Register success!"
                 };
             }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
-            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Register fail!"
+                };
             }
         }
         [Authorize]
@@ -88,10 +88,6 @@ namespace Gateway.Web.Host.Controllers
                     Success = true,
                     Message = "Refresh token success!"
                 };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
             }
             catch (Exception ex)
             {
@@ -117,10 +113,6 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Logout success!"
                 };
             }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
-            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -142,13 +134,14 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Change password success"
                 };
             }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
-            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Change password fail"
+                };
             }
         }
     }
