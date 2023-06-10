@@ -40,7 +40,7 @@ namespace Gateway.Web.Host.Controllers
             {
                 return new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
                     Success = false,
                     Message = "Login fail"
                 };
@@ -64,7 +64,7 @@ namespace Gateway.Web.Host.Controllers
             {
                 return new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
                     Success = false,
                     Message = "Register fail!"
                 };
@@ -115,7 +115,12 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Logout fail!"
+                };
             }
         }
         [Authorize]
