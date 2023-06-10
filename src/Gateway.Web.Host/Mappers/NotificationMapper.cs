@@ -11,6 +11,8 @@ namespace Gateway.Web.Host.Mappers
             CreateMap<GetAllNotificationsInputDto, GetAllNotificationsRequest>();
             CreateMap<CreateNotificationInputDto, CreateNotificationRequest>();
             CreateMap<UpdateNotificationInputDto, UpdateNotificationRequest>();
+
+            CreateMap<UpdateStatusNotificationInputDto, UpdateStatusNotificationRequest>();
         }
     }
 }
