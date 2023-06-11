@@ -88,9 +88,11 @@ IServiceCollection services = builder.Services;
 // subscribe and handle message 
 var firebaseService = services.BuildServiceProvider().GetService<IFirebaseService>();
 var deviceGrpcClient = services.BuildServiceProvider().GetService<DeviceGrpc.DeviceGrpcClient>();
+var homeGrpcClient = services.BuildServiceProvider().GetService<HomeGrpc.HomeGrpcClient>();
+var roomGrpcClient = services.BuildServiceProvider().GetService<RoomGrpc.RoomGrpcClient>();
 var notificationGrpcClient = services.BuildServiceProvider().GetService<NotificationGrpc.NotificationGrpcClient>();
 var userGrpcClient = services.BuildServiceProvider().GetService<UserGrpc.UserGrpcClient>();
-MqttUtils mqttUtils = new(configuration, userGrpcClient, firebaseService, deviceGrpcClient, notificationGrpcClient);
+MqttUtils mqttUtils = new(configuration, userGrpcClient, firebaseService, deviceGrpcClient, homeGrpcClient, roomGrpcClient, notificationGrpcClient);
 mqttUtils.SubscribeAndHandleMessage();
 
 WebApplication app = builder.Build();
