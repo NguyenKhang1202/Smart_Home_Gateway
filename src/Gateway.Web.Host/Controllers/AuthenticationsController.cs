@@ -149,5 +149,30 @@ namespace Gateway.Web.Host.Controllers
                 };
             }
         }
+
+        [HttpPost("verify-token")]
+        public async Task<ResponseDto> VerifyToken([FromBody] VerifyTokenInputDto input)
+        {
+            try
+            {
+                ValidateTokenRequest request = _mapper.Map<ValidateTokenRequest>(input);
+                ValidateTokenResponse response = await _authenticationGrpcClient.ValidateTokenAsync(request);
+                return new ResponseDto()
+                {
+                    Data = true,
+                    Success = true,
+                    Message = "Verify token success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Token is invalid"
+                };
+            }
+        }
     }
 }

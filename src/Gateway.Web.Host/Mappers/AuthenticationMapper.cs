@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Gateway.Core.Dtos.Authentications;
-using Gateway.Web.Host.Protos;
 using Gateway.Web.Host.Protos.Authentications;
 
 namespace Gateway.Web.Host.Mappers
@@ -24,7 +23,10 @@ namespace Gateway.Web.Host.Mappers
             CreateMap<ChangePasswordInputDto, ChangePasswordRequest>()
                 .ForMember(d => d.OldPassword, s => s.MapFrom(i => i.OldPassword ?? ""))
                 .ForMember(d => d.NewPassword, s => s.MapFrom(i => i.NewPassword ?? ""));
-        }
 
+            // Verify token
+            CreateMap<VerifyTokenInputDto, ValidateTokenRequest>()
+                .ForMember(d => d.Token, s => s.MapFrom(i => i.Token ?? ""));
+        }
     }
 }
