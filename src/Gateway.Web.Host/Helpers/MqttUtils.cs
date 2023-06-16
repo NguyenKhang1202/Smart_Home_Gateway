@@ -10,6 +10,10 @@ using Gateway.Web.Host.Services;
 using Gateway.Web.Host.Protos.Users;
 using Gateway.Web.Host.Protos.Homes;
 using Gateway.Web.Host.Protos.Rooms;
+using FireSharp.Config;
+using FireSharp.Interfaces;
+using FireSharp.Response;
+using Gateway.Core.Dtos.DataSensors;
 
 namespace Gateway.Web.Host.Helpers
 {
@@ -22,6 +26,7 @@ namespace Gateway.Web.Host.Helpers
         private readonly HomeGrpc.HomeGrpcClient _homeGrpcClient;
         private readonly RoomGrpc.RoomGrpcClient _roomGrpcClient;
         private readonly IFirebaseService _firebaseService;
+        private readonly IFirebaseClient _firebaseClient;
         public MqttUtils(IConfiguration configuration,
             UserGrpc.UserGrpcClient userGrpcClient,
             IFirebaseService firebaseService,
@@ -37,6 +42,11 @@ namespace Gateway.Web.Host.Helpers
             _roomGrpcClient = roomGrpcClient;
             _userGrpcClient = userGrpcClient;
             _notificationGrpcClient = notificationGrpcClient;
+            _firebaseClient = new FireSharp.FirebaseClient(new FirebaseConfig
+            {
+                AuthSecret = "9J4DiNjy88ZJZA2WPqdFKng8HFXvvDCBFmVQ6ApZ",
+                BasePath = "https://fire-alarm-system-c6a01-default-rtdb.firebaseio.com"
+            });
         }
 
         public async void SubscribeAndHandleMessage()
@@ -179,12 +189,37 @@ namespace Gateway.Web.Host.Helpers
                                 DeviceCode = data.DeviceCode,
                                 Data = { listData }
                             });
+
+                            // insert database firebase realtime
+                            PushDataFirebase((int)data.Humidity, (int)data.Temperature);
                             break;
                     }
                 }
             } catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+        }
+
+        private async void PushDataFirebase(int humidity, int temperature)
+        {
+            try
+            {
+                DateTime dateTime = DateTime.Now;
+                DhtDataDto dhtDataDto = new()
+                {
+                    humidity = humidity,
+                    temperature = temperature,
+                    year = dateTime.Year,
+                    month = dateTime.Month,
+                    day = dateTime.Day,
+                    hour = dateTime.Hour,
+                    minute = dateTime.Minute
+                };
+                PushResponse response = await _firebaseClient.PushAsync("DhtData/", dhtDataDto);
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
     }

@@ -24,50 +24,50 @@ namespace Gateway.Web.Host.Controllers
             _mapper = mapper;
         }
         [HttpPost("login")]
-        public async Task<ResponseDto> Login([FromBody] LoginInputDto input)
+        public IActionResult Login([FromBody] LoginInputDto input)
         {
             try
             {
-                LoginResponse response = await _authenticationGrpcClient.LoginAsync(_mapper.Map<LoginRequest>(input));
-                return new ResponseDto()
+                LoginResponse response = _authenticationGrpcClient.Login(_mapper.Map<LoginRequest>(input));
+                return Ok(new ResponseDto()
                 {
                     Data = response,
                     Success = true,
                     Message = "Login success!"
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new ResponseDto()
+                return BadRequest(new ResponseDto()
                 {
                     Data = null,
                     Success = false,
                     Message = "Login fail"
-                };
+                });
             }
         }
 
         [HttpPost("register")]
-        public async Task<ResponseDto> Register([FromBody] RegisterInputDto input)
+        public IActionResult Register([FromBody] RegisterInputDto input)
         {
             try
             {
-                RegisterResponse response = await _authenticationGrpcClient.RegisterAsync(_mapper.Map<RegisterRequest>(input));
-                return new ResponseDto()
+                RegisterResponse response = _authenticationGrpcClient.Register(_mapper.Map<RegisterRequest>(input));
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Register success!"
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new ResponseDto()
+                return BadRequest(new ResponseDto()
                 {
                     Data = null,
                     Success = false,
                     Message = "Register fail!"
-                };
+                });
             }
         }
         [Authorize]
