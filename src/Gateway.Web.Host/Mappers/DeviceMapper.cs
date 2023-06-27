@@ -8,7 +8,7 @@ namespace Gateway.Web.Host.Mappers
 {
     public class DeviceMapper : Profile
     {
-        public DeviceMapper() 
+        public DeviceMapper()
         {
             // Device
             CreateMap<GetAllDevicesInputDto, GetAllDevicesRequest>()
@@ -23,6 +23,7 @@ namespace Gateway.Web.Host.Mappers
                .ForMember(d => d.GatewayCode, s => s.MapFrom(i => i.GatewayCode ?? ""))
                .ForMember(d => d.RoomId, s => s.MapFrom(i => i.RoomId ?? ""))
                .ForMember(d => d.Producer, s => s.MapFrom(i => i.Producer ?? ""))
+               .ForMember(d => d.MacAddress, s => s.MapFrom(i => i.MacAddress ?? ""))
                .ForMember(d => d.ImagesUrl, s => s.MapFrom(i => i.ImagesUrl ?? new List<string>()));
             CreateMap<UpdateDeviceInputDto, UpdateDeviceRequest>()
                 .ForMember(d => d.Id, s => s.MapFrom(i => i.Id ?? ""))
@@ -49,6 +50,7 @@ namespace Gateway.Web.Host.Mappers
                 .ForMember(d => d.Speed, s => s.MapFrom(i => i.Speed))
                 .ForMember(d => d.Intensity, s => s.MapFrom(i => i.Intensity));
 
+            CreateMap<DataDusun, PDataDusun>().ReverseMap();
             // Gateway
             CreateMap<GetAllGatewaysInputDto, GetAllGatewaysRequest>()
                 .ForMember(d => d.HomeId, s => s.MapFrom(i => i.HomeId ?? ""));

@@ -9,8 +9,9 @@
         public string HomeDeviceId { get; set; }
         public string RoomId { get; set; }
         public string? Properties { get; set; }
-        public string GatewayCode { get; set; }
+        public string? GatewayCode { get; set; }
         public string? Producer { get; set; }
         public List<string> ImagesUrl { get; set; }
+        public string? MacAddress { get; set; } = string.Empty;
     }
 }

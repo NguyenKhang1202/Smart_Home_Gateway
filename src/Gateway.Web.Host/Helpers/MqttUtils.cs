@@ -1,19 +1,19 @@
-﻿using MQTTnet.Client;
-using MQTTnet;
-using MQTTnet.Server;
-using Newtonsoft.Json;
-using Gateway.Web.Host.Protos.Devices;
-using Gateway.Core.Settings;
-using Gateway.Web.Host.Protos.Notifications;
-using static Gateway.Application.Shared.Enums.DeviceEnum;
-using Gateway.Web.Host.Services;
-using Gateway.Web.Host.Protos.Users;
-using Gateway.Web.Host.Protos.Homes;
-using Gateway.Web.Host.Protos.Rooms;
-using FireSharp.Config;
+﻿using FireSharp.Config;
 using FireSharp.Interfaces;
 using FireSharp.Response;
 using Gateway.Core.Dtos.DataSensors;
+using Gateway.Core.Settings;
+using Gateway.Web.Host.Protos.Devices;
+using Gateway.Web.Host.Protos.Homes;
+using Gateway.Web.Host.Protos.Notifications;
+using Gateway.Web.Host.Protos.Rooms;
+using Gateway.Web.Host.Protos.Users;
+using Gateway.Web.Host.Services;
+using MQTTnet;
+using MQTTnet.Client;
+using MQTTnet.Server;
+using Newtonsoft.Json;
+using static Gateway.Application.Shared.Enums.DeviceEnum;
 
 namespace Gateway.Web.Host.Helpers
 {
@@ -33,7 +33,7 @@ namespace Gateway.Web.Host.Helpers
             DeviceGrpc.DeviceGrpcClient deviceGrpcClient,
             HomeGrpc.HomeGrpcClient homeGrpcClient,
             RoomGrpc.RoomGrpcClient roomGrpcClient,
-            NotificationGrpc.NotificationGrpcClient notificationGrpcClient) 
+            NotificationGrpc.NotificationGrpcClient notificationGrpcClient)
         {
             _configuration = configuration;
             _firebaseService = firebaseService;
@@ -52,7 +52,6 @@ namespace Gateway.Web.Host.Helpers
         public async void SubscribeAndHandleMessage()
         {
             MqttFactory mqttFactory = new();
-            List<MqttDataReceive>? data = new();
             IMqttClient mqttClient = mqttFactory.CreateMqttClient();
 
             MqttClientOptions options = new MqttClientOptionsBuilder()
@@ -67,14 +66,25 @@ namespace Gateway.Web.Host.Helpers
             {
                 // subscribe
                 await mqttClient.SubscribeAsync(TOPIC_DATA);
+                await mqttClient.SubscribeAsync(TOPIC_GATEWAY_SUBSCRIBE);
 
                 // receive message
                 mqttClient.ApplicationMessageReceivedAsync += e =>
                 {
                     string payload = ConvertByteToString(e.ApplicationMessage.PayloadSegment);
-                    data = JsonConvert.DeserializeObject<List<MqttDataReceive>>(payload);
-
-                    HandleMqttData(data);
+                    switch (e.ApplicationMessage.Topic.ToString())
+                    {
+                        case var value when value == TOPIC_DATA:
+                            var dataReceiveEsp32 = JsonConvert.DeserializeObject<List<MqttDataReceive>>(payload);
+                            HandleMqttData(dataReceiveEsp32);
+                            break;
+                        case var value when value == TOPIC_GATEWAY_SUBSCRIBE:
+                            var dataReceiveDusun = JsonConvert.DeserializeObject<MqttDataReceiveDusun>(payload);
+                            HandleMqttDataDusun(dataReceiveDusun);
+                            break;
+                        default:
+                            break;
+                    }
                     Console.WriteLine(payload);
                     return Task.CompletedTask;
                 };
@@ -147,7 +157,7 @@ namespace Gateway.Web.Host.Helpers
         {
             try
             {
-                foreach(var data in datas)
+                foreach (var data in datas)
                 {
                     NotificationInfo notificationInfo = await GetNotificationInfo(data.DeviceCode);
                     PUser user = await GetUserAsync(notificationInfo.UserId);
@@ -156,7 +166,7 @@ namespace Gateway.Web.Host.Helpers
                     {
                         case (int)DEVICE_TYPE.FLAME:
                         case (int)DEVICE_TYPE.MQ2:
-                            if(data.Value == 0)
+                            if (data.Value == 0)
                             {
                                 CreateNotificationRequest request = new()
                                 {
@@ -195,7 +205,23 @@ namespace Gateway.Web.Host.Helpers
                             break;
                     }
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        private async void HandleMqttDataDusun(MqttDataReceiveDusun data)
+        {
+            try
+            {
+                if (Equals(data.Type, TYPE_REGISTER_REQ) && Equals(data.From, DEVICE_PUBLISH_GATEWAY))
+                {
+                    HandleRegisterGateway(data);
+                }
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -217,10 +243,16 @@ namespace Gateway.Web.Host.Helpers
                     minute = dateTime.Minute
                 };
                 PushResponse response = await _firebaseClient.PushAsync("DhtData/", dhtDataDto);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        private void HandleRegisterGateway(MqttDataReceiveDusun data)
+        {
+            Console.WriteLine("Register gateway ...");
         }
     }
 }

@@ -17,5 +17,12 @@ namespace Gateway.Core.Entities
         public List<string> ImagesUrl { get; set; }
         public ControlDevice Control { get; set; }
         public List<int> Data { get; set; }
+        public string? MacAddress { get; set; }
+        public List<DataDusun>? DataDusuns { get; set; }
+    }
+    public class DataDusun
+    {
+        public int Value { get; set; }
+        public int EndPoint { get; set; }
     }
 }

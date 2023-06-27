@@ -42,6 +42,13 @@ message PDevice {
   string GatewayCode = 14;
   string CreatedAt = 15;
   string UpdatedAt = 16;
+  string MacAddress = 17;
+  repeated PDataDusun DataDusuns = 18;
+}
+
+message PDataDusun {
+  int32 Value = 1;
+  int32 EndPoint = 2;
 }
 
 message PControl {
@@ -92,6 +99,8 @@ message CreateDeviceRequest {
   repeated string ImagesUrl = 9;
   string RoomId = 10;
   string GatewayCode = 11;
+  string MacAddress = 12;
+  repeated PDataDusun DataDusuns = 13;
 }
 
 message CreateDeviceResponse {
