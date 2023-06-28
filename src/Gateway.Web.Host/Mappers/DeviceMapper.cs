@@ -42,6 +42,11 @@ namespace Gateway.Web.Host.Mappers
                     Direction = i.Control.Direction,
                     Speed = i.Control.Speed,
                     Intensity = i.Control.Intensity,
+                }))
+                .ForMember(d => d.ControlDusun, s => s.MapFrom(i => new PControlDeviceDusun()
+                {
+                    EndPoint = i.ControlDusun.EndPoint,
+                    Value = i.ControlDusun.Value,
                 }));
             CreateMap<PControl, ControlDevice>()
                 .ForMember(d => d.Status, s => s.MapFrom(i => i.Status))

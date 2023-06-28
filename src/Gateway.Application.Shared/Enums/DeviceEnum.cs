@@ -37,8 +37,10 @@
 
         public static string COMMAND_ADD_DEVICE = "setAttribute";
         public static string COMMAND_DELETE_DEVICE = "setAttribute";
+        public static string COMMAND_CONTROL_DEVICE = "setAttribute";
 
         public static string ATTRIBUTE_ADD_DEVICE = "mod.add_device";
         public static string ATTRIBUTE_DELETE_DEVICE = "mod.del_device";
+        public static string ATTRIBUTE_CONTROL_DEVICE = "device.onoff";
     }
 }

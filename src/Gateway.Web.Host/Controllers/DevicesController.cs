@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Gateway.Application.Shared.Enums;
 using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Devices;
 using Gateway.Core.Entities;
@@ -135,7 +134,7 @@ namespace Gateway.Web.Host.Controllers
                             mac = input.MacAddress,
                         },
                         deviceCode = input.DeviceCode,
-                        time = (long)(((DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds) / 1000),
+                        time = HelpersClass.GetCurrentTimeByLong(),
                         mac = input.MacAddress,
                         to = DEVICE_PUBLISH_GATEWAY,
                         from = DEVICE_PUBLISH_CLOUD,
@@ -146,7 +145,6 @@ namespace Gateway.Web.Host.Controllers
                 }
                 else
                 {
-
                     AddDeviceDusun addDeviceDusun = new()
                     {
                         data = new AddDeviceDataInside()
@@ -166,8 +164,8 @@ namespace Gateway.Web.Host.Controllers
                         },
                         from = DEVICE_PUBLISH_CLOUD,
                         mac = res.Data.MacAddress,
-                        messageId = (long)(((DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds) / 1000),
-                        time = (long)(((DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds) / 1000),
+                        messageId = HelpersClass.GetCurrentTimeByLong(),
+                        time = HelpersClass.GetCurrentTimeByLong(),
                         to = DEVICE_PUBLISH_NXP,
                         type = TYPE_CMD,
                     };
@@ -238,9 +236,50 @@ namespace Gateway.Web.Host.Controllers
         {
             try
             {
+                GetDeviceByIdResponse responseGetDevice = await _deviceGrpcClient.GetDeviceByIdAsync(
+                   new GetDeviceByIdRequest()
+                   {
+                       Id = id,
+                   });
+                GetDeviceByCodeResponse responseGateway = await _deviceGrpcClient.GetDeviceByCodeAsync(
+                    new GetDeviceByCodeRequest()
+                    {
+                        DeviceCode = responseGetDevice.Data.GatewayCode,
+                    });
                 ControlDeviceResponse controlResponse = await _deviceGrpcClient.ControlDeviceAsync(
                     _mapper.Map<ControlDeviceRequest>(input));
-                if (controlResponse.Data == true)
+
+                if (controlResponse.Data == true && responseGateway.Data.Type == (int)DEVICE_TYPE.GATEWAY_DUSUN)
+                {
+                    ControlDeviceDto controlDeviceDto = new()
+                    {
+                        to = DEVICE_PUBLISH_GREENPOWER,
+                        from = DEVICE_PUBLISH_CLOUD,
+                        type = TYPE_CMD,
+                        time = HelpersClass.GetCurrentTimeByLong(),
+                        deviceCode = responseGateway.Data.DeviceCode,
+                        mac = responseGateway.Data.MacAddress,
+                        data = new()
+                        {
+                            id = responseGetDevice.Data.Id,
+                            command = COMMAND_CONTROL_DEVICE,
+                            arguments = new()
+                            {
+                                mac = responseGetDevice.Data.MacAddress,
+                                ep = input.ControlDusun.EndPoint.ToString(),
+                                attribute = ATTRIBUTE_CONTROL_DEVICE,
+                                value = new()
+                                {
+                                    value = input.ControlDusun.Value,
+                                }
+                            }
+                        }
+                    };
+                    string topicPublish = TOPIC_GATEWAY_PUBLISH_PREFIX + $"/{responseGateway.Data.MacAddress}";
+                    _mqttService.PublishMqtt(topicPublish, JsonConvert.SerializeObject(controlDeviceDto));
+                }
+
+                if (controlResponse.Data == true && responseGateway.Data.Type != (int)DEVICE_TYPE.GATEWAY_DUSUN)
                 {
                     GetDeviceByIdResponse deviceResponse = await _deviceGrpcClient.GetDeviceByIdAsync(new GetDeviceByIdRequest()
                     {
@@ -252,8 +291,7 @@ namespace Gateway.Web.Host.Controllers
                         DeviceCode = deviceResponse.Data.DeviceCode,
                         Control = _mapper.Map<ControlDevice>(deviceResponse.Data.Control),
                     };
-
-                    _mqttService.PublishMqtt(DeviceEnum.TOPIC_CONTROL, JsonConvert.SerializeObject(payload));
+                    _mqttService.PublishMqtt(TOPIC_CONTROL, JsonConvert.SerializeObject(payload));
                 }
                 return new ResponseDto()
                 {

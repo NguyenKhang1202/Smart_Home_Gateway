@@ -110,6 +110,12 @@ message CreateDeviceResponse {
 message ControlDeviceRequest {
   string Id = 1;
   PControl Control = 2;
+  PControlDeviceDusun ControlDusun = 3;
+}
+
+message PControlDeviceDusun {
+  int32 Value = 1;
+  int32 EndPoint = 2;
 }
 
 message ControlDeviceResponse {
