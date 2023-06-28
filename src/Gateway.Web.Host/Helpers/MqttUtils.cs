@@ -145,6 +145,14 @@ namespace Gateway.Web.Host.Helpers
             });
             return response.Data;
         }
+        private async Task<PDevice> GetDeviceByMacAddress(string deviceMacAddress)
+        {
+            GetDeviceByMacAddressResponse response = await _deviceGrpcClient.GetDeviceByMacAddressAsync(new GetDeviceByMacAddressRequest()
+            {
+                DeviceMacAddress = deviceMacAddress
+            });
+            return response.Data;
+        }
         private async Task<PUser> GetUserAsync(string UserId)
         {
             GetUserByIdResponse response = await _userGrpcClient.GetUserByIdAsync(new GetUserByIdRequest()
@@ -216,9 +224,36 @@ namespace Gateway.Web.Host.Helpers
         {
             try
             {
-                if (Equals(data.Type, TYPE_REGISTER_REQ) && Equals(data.From, DEVICE_PUBLISH_GATEWAY))
+                if (Equals(data.type, TYPE_REGISTER_REQ) && Equals(data.from, DEVICE_PUBLISH_GATEWAY))
                 {
+                    // register gateway
                     HandleRegisterGateway(data);
+                }
+                else if (Equals(data.type, TYPE_REPORT) && Equals(data.from, DEVICE_PUBLISH_GREENPOWER))
+                {
+                    // update state device
+                    string gatewayMacAddress = data.mac;
+                    string deviceMacAddress = data.data.mac;
+                    int endPoint = (int)data.data.ep;
+                    int value = (int)data.data.value.value;
+                    PDevice pDevice = await GetDeviceByMacAddress(deviceMacAddress);
+                    ControlDeviceResponse response = await _deviceGrpcClient.ControlDeviceAsync(new ControlDeviceRequest()
+                    {
+                        Id = pDevice.Id,
+                        Control = new()
+                        {
+                            Direction = 0,
+                            Intensity = 0,
+                            Mode = 0,
+                            Speed = 0,
+                            Status = 0
+                        },
+                        ControlDusun = new()
+                        {
+                            EndPoint = endPoint,
+                            Value = value
+                        }
+                    });
                 }
             }
             catch (Exception e)
@@ -227,6 +262,10 @@ namespace Gateway.Web.Host.Helpers
             }
         }
 
+        private async void UpdateStatusDeviceDusun()
+        {
+
+        }
         private async void PushDataFirebase(int humidity, int temperature)
         {
             try

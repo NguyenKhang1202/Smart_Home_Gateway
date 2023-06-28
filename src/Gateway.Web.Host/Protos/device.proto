@@ -8,6 +8,7 @@ service DeviceGrpc {
   rpc GetAllDevices (GetAllDevicesRequest) returns (GetAllDevicesResponse);
   rpc GetDeviceById (GetDeviceByIdRequest) returns (GetDeviceByIdResponse);
   rpc GetDeviceByCode (GetDeviceByCodeRequest) returns (GetDeviceByCodeResponse);
+  rpc GetDeviceByMacAddress (GetDeviceByMacAddressRequest) returns (GetDeviceByMacAddressResponse);
   rpc CreateDevice (CreateDeviceRequest) returns (CreateDeviceResponse);
   rpc UpdateDevice (UpdateDeviceRequest) returns (UpdateDeviceResponse);
   rpc UpdateDataDevice (UpdateDataDeviceRequest) returns (UpdateDataDeviceResponse);
@@ -84,6 +85,14 @@ message GetDeviceByCodeRequest {
 }
 
 message GetDeviceByCodeResponse {
+  PDevice Data = 1;
+}
+
+message GetDeviceByMacAddressRequest {
+  string DeviceMacAddress = 1;
+}
+
+message GetDeviceByMacAddressResponse {
   PDevice Data = 1;
 }
 
