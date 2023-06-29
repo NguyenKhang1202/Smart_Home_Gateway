@@ -12,7 +12,7 @@ namespace Gateway.Web.Host.Services
     {
         private FirebaseMessaging _firebaseMessagingInstance { get; set; }
         private FirebaseApp _app { get; set; }
-        public FirebaseService() 
+        public FirebaseService()
         {
             _app = FirebaseApp.Create(new AppOptions
             {
@@ -32,14 +32,15 @@ namespace Gateway.Web.Host.Services
                 }
             };
         }
-        public async Task<string> SendNotification(string Token, string Title, string Body)
+        public async Task<string> SendNotification(string token, string title, string body)
         {
             try
             {
                 string messageId = await _firebaseMessagingInstance
-                    .SendAsync(CreateNotification(Title, Body, Token)).ConfigureAwait(false);
+                    .SendAsync(CreateNotification(title, body, token)).ConfigureAwait(false);
                 return messageId;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 return "";

@@ -2,6 +2,7 @@
 using FireSharp.Interfaces;
 using FireSharp.Response;
 using Gateway.Core.Dtos.DataSensors;
+using Gateway.Core.Dtos.Devices;
 using Gateway.Core.Settings;
 using Gateway.Web.Host.Protos.Devices;
 using Gateway.Web.Host.Protos.Homes;
@@ -254,6 +255,8 @@ namespace Gateway.Web.Host.Helpers
                             Value = value
                         }
                     });
+
+                    UpdateStatusDeviceDusun(deviceMacAddress, value, endPoint);
                 }
             }
             catch (Exception e)
@@ -262,9 +265,21 @@ namespace Gateway.Web.Host.Helpers
             }
         }
 
-        private async void UpdateStatusDeviceDusun()
+        // UPDATE to firebase
+        private async void UpdateStatusDeviceDusun(string deviceMacAddress, int value, int endPoint)
         {
-
+            try
+            {
+                StatusDeviceDusunDto statusDeviceDusunDto = new()
+                {
+                    value = value,
+                };
+                await _firebaseClient.UpdateAsync($"{PATH_STATUS_DEVICE_DUSUN}/{deviceMacAddress}/{endPoint}", statusDeviceDusunDto);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
         private async void PushDataFirebase(int humidity, int temperature)
         {
@@ -281,7 +296,7 @@ namespace Gateway.Web.Host.Helpers
                     hour = dateTime.Hour,
                     minute = dateTime.Minute
                 };
-                PushResponse response = await _firebaseClient.PushAsync("DhtData/", dhtDataDto);
+                PushResponse response = await _firebaseClient.PushAsync($"{PATH_DHT_DATA}/", dhtDataDto);
             }
             catch (Exception ex)
             {

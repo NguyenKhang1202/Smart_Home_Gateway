@@ -42,5 +42,8 @@
         public static string ATTRIBUTE_ADD_DEVICE = "mod.add_device";
         public static string ATTRIBUTE_DELETE_DEVICE = "mod.del_device";
         public static string ATTRIBUTE_CONTROL_DEVICE = "device.onoff";
+
+        public static string PATH_DHT_DATA = "DhtData";
+        public static string PATH_STATUS_DEVICE_DUSUN = "DEVICE_DUSUN";
     }
 }
