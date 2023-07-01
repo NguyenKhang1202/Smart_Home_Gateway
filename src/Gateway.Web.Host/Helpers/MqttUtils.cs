@@ -237,6 +237,7 @@ namespace Gateway.Web.Host.Helpers
                     string deviceMacAddress = data.data.mac;
                     int endPoint = (int)data.data.ep;
                     int value = (int)data.data.value.value;
+                    UpdateStatusDeviceDusun(deviceMacAddress, value, endPoint);
                     PDevice pDevice = await GetDeviceByMacAddress(deviceMacAddress);
                     ControlDeviceResponse response = await _deviceGrpcClient.ControlDeviceAsync(new ControlDeviceRequest()
                     {
@@ -255,8 +256,6 @@ namespace Gateway.Web.Host.Helpers
                             Value = value
                         }
                     });
-
-                    UpdateStatusDeviceDusun(deviceMacAddress, value, endPoint);
                 }
             }
             catch (Exception e)

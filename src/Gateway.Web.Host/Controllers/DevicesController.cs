@@ -114,7 +114,7 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpPost("")]
-        public async Task<ResponseDto> CreateDevice([FromBody] CreateDeviceInputDto input)
+        public async Task<IActionResult> CreateDevice([FromBody] CreateDeviceInputDto input)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace Gateway.Web.Host.Controllers
                 {
                     DeviceCode = input.GatewayCode,
                 });
-                if (input.Type == (int)DEVICE_TYPE.GATEWAY)
+                if (input.Type == (int)DEVICE_TYPE.GATEWAY_DUSUN)
                 {
                     string topicPublish = TOPIC_GATEWAY_PUBLISH_PREFIX + $"/{input.MacAddress}";
                     RegisterGatewayResponse registerGatewayResponse = new()
@@ -143,8 +143,17 @@ namespace Gateway.Web.Host.Controllers
                     // Gửi thông tin DEVICE_CODE tới gateway
                     _mqttService.PublishMqtt(topicPublish, JsonConvert.SerializeObject(registerGatewayResponse));
                 }
-                else
+                else if (input.Type != (int)DEVICE_TYPE.GATEWAY)
                 {
+                    if (res.Data == null)
+                    {
+                        return NotFound(new ResponseDto()
+                        {
+                            Success = false,
+                            Data = null,
+                            Message = "Gateway not found. Device insertion failed!",
+                        });
+                    }
                     AddDeviceDusun addDeviceDusun = new()
                     {
                         data = new AddDeviceDataInside()
@@ -190,12 +199,12 @@ namespace Gateway.Web.Host.Controllers
                     DataDusuns = { GetListEndPointDevice(input.Type) },
                 };
                 CreateDeviceResponse response = await _deviceGrpcClient.CreateDeviceAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Create device success"
-                };
+                });
             }
             catch (RpcException ex)
             {
@@ -249,7 +258,9 @@ namespace Gateway.Web.Host.Controllers
                 ControlDeviceResponse controlResponse = await _deviceGrpcClient.ControlDeviceAsync(
                     _mapper.Map<ControlDeviceRequest>(input));
 
-                if (controlResponse.Data == true && responseGateway.Data.Type == (int)DEVICE_TYPE.GATEWAY_DUSUN)
+                // Device dusun -> publish mqtt
+                if (controlResponse.Data == true
+                    && responseGateway.Data.Type == (int)DEVICE_TYPE.GATEWAY_DUSUN)
                 {
                     ControlDeviceDto controlDeviceDto = new()
                     {
@@ -383,29 +394,36 @@ namespace Gateway.Web.Host.Controllers
                     dataDusuns.Add(new PDataDusun()
                     {
                         EndPoint = 1,
-                        Value = 1,
+                        Value = 0,
+                    });
+                    break;
+                case (int)DEVICE_TYPE.LIGHT:
+                    dataDusuns.Add(new PDataDusun()
+                    {
+                        EndPoint = 1,
+                        Value = 0,
                     });
                     break;
                 case (int)DEVICE_TYPE.SWITCH:
                     dataDusuns.Add(new PDataDusun()
                     {
-                        Value = 0,
                         EndPoint = 1,
+                        Value = 0,
                     });
                     dataDusuns.Add(new PDataDusun()
                     {
-                        Value = 0,
                         EndPoint = 2,
+                        Value = 0,
                     });
                     dataDusuns.Add(new PDataDusun()
                     {
-                        Value = 0,
                         EndPoint = 3,
+                        Value = 0,
                     });
                     dataDusuns.Add(new PDataDusun()
                     {
-                        Value = 0,
                         EndPoint = 242,
+                        Value = 0,
                     });
                     break;
                 default:
