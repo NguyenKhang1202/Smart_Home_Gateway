@@ -63,37 +63,34 @@ namespace Gateway.Web.Host.Helpers
                                 .Build();
 
             await mqttClient.ConnectAsync(options);
-            if (mqttClient.IsConnected)
-            {
-                // subscribe
-                await mqttClient.SubscribeAsync(TOPIC_DATA);
-                await mqttClient.SubscribeAsync(TOPIC_GATEWAY_SUBSCRIBE);
-
-                // receive message
-                mqttClient.ApplicationMessageReceivedAsync += e =>
-                {
-                    string payload = ConvertByteToString(e.ApplicationMessage.PayloadSegment);
-                    switch (e.ApplicationMessage.Topic.ToString())
-                    {
-                        case var value when value == TOPIC_DATA:
-                            var dataReceiveEsp32 = JsonConvert.DeserializeObject<List<MqttDataReceive>>(payload);
-                            HandleMqttData(dataReceiveEsp32);
-                            break;
-                        case var value when value == TOPIC_GATEWAY_SUBSCRIBE:
-                            var dataReceiveDusun = JsonConvert.DeserializeObject<MqttDataReceiveDusun>(payload);
-                            HandleMqttDataDusun(dataReceiveDusun);
-                            break;
-                        default:
-                            break;
-                    }
-                    Console.WriteLine(payload);
-                    return Task.CompletedTask;
-                };
-            }
-            else
+            if (!mqttClient.IsConnected)
             {
                 Console.WriteLine("Connect MQTT fail");
             }
+            // subscribe
+            await mqttClient.SubscribeAsync(TOPIC_DATA);
+            await mqttClient.SubscribeAsync(TOPIC_GATEWAY_SUBSCRIBE);
+
+            // receive message
+            mqttClient.ApplicationMessageReceivedAsync += e =>
+            {
+                string payload = ConvertByteToString(e.ApplicationMessage.PayloadSegment);
+                switch (e.ApplicationMessage.Topic.ToString())
+                {
+                    case var value when value == TOPIC_DATA:
+                        var dataReceiveEsp32 = JsonConvert.DeserializeObject<List<MqttDataReceive>>(payload);
+                        HandleMqttData(dataReceiveEsp32);
+                        break;
+                    case var value when value == TOPIC_GATEWAY_SUBSCRIBE:
+                        var dataReceiveDusun = JsonConvert.DeserializeObject<MqttDataReceiveDusun>(payload);
+                        HandleMqttDataDusun(dataReceiveDusun);
+                        break;
+                    default:
+                        break;
+                }
+                Console.WriteLine(payload);
+                return Task.CompletedTask;
+            };
         }
 
         private static string ConvertByteToString(System.ArraySegment<byte> bytes)
