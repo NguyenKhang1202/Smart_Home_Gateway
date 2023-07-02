@@ -245,7 +245,7 @@ namespace Gateway.Web.Host.Helpers
                             Intensity = 0,
                             Mode = 0,
                             Speed = 0,
-                            Status = 0
+                            Status = value
                         },
                         ControlDusun = new()
                         {

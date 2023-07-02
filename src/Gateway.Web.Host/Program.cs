@@ -1,14 +1,14 @@
+using Gateway.Core.Settings;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Authentications;
-using Gateway.Web.Host.Protos.Users;
-using Gateway.Web.Host.Protos.Homes;
 using Gateway.Web.Host.Protos.Devices;
-using Gateway.Core.Settings;
-using Gateway.Web.Host.Services;
-using Microsoft.OpenApi.Models;
-using Gateway.Web.Host.Protos.Rooms;
+using Gateway.Web.Host.Protos.Homes;
 using Gateway.Web.Host.Protos.Notifications;
+using Gateway.Web.Host.Protos.Rooms;
+using Gateway.Web.Host.Protos.Users;
+using Gateway.Web.Host.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.OpenApi.Models;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -85,7 +85,7 @@ IServiceCollection services = builder.Services;
     // add AutoMapper
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 }
-// subscribe and handle message 
+/*// subscribe and handle message 
 var firebaseService = services.BuildServiceProvider().GetService<IFirebaseService>();
 var deviceGrpcClient = services.BuildServiceProvider().GetService<DeviceGrpc.DeviceGrpcClient>();
 var homeGrpcClient = services.BuildServiceProvider().GetService<HomeGrpc.HomeGrpcClient>();
@@ -93,7 +93,7 @@ var roomGrpcClient = services.BuildServiceProvider().GetService<RoomGrpc.RoomGrp
 var notificationGrpcClient = services.BuildServiceProvider().GetService<NotificationGrpc.NotificationGrpcClient>();
 var userGrpcClient = services.BuildServiceProvider().GetService<UserGrpc.UserGrpcClient>();
 MqttUtils mqttUtils = new(configuration, userGrpcClient, firebaseService, deviceGrpcClient, homeGrpcClient, roomGrpcClient, notificationGrpcClient);
-mqttUtils.SubscribeAndHandleMessage();
+mqttUtils.SubscribeAndHandleMessage();*/
 
 WebApplication app = builder.Build();
 
