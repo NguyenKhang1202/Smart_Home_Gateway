@@ -53,7 +53,6 @@ IServiceCollection services = builder.Services;
     services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     services.AddTransient<JwtMiddleware>();
     services.AddScoped<IMqttService, MqttService>();
-    services.AddSingleton<IFirebaseService, FirebaseService>();
     services.AddSingleton<IAppSession, AppSession>();
 
     // add gRPC client
@@ -81,19 +80,9 @@ IServiceCollection services = builder.Services;
     {
         o.Address = new Uri(configuration["Services:NotificationServiceUrl"]);
     });
-
     // add AutoMapper
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 }
-/*// subscribe and handle message 
-var firebaseService = services.BuildServiceProvider().GetService<IFirebaseService>();
-var deviceGrpcClient = services.BuildServiceProvider().GetService<DeviceGrpc.DeviceGrpcClient>();
-var homeGrpcClient = services.BuildServiceProvider().GetService<HomeGrpc.HomeGrpcClient>();
-var roomGrpcClient = services.BuildServiceProvider().GetService<RoomGrpc.RoomGrpcClient>();
-var notificationGrpcClient = services.BuildServiceProvider().GetService<NotificationGrpc.NotificationGrpcClient>();
-var userGrpcClient = services.BuildServiceProvider().GetService<UserGrpc.UserGrpcClient>();
-MqttUtils mqttUtils = new(configuration, userGrpcClient, firebaseService, deviceGrpcClient, homeGrpcClient, roomGrpcClient, notificationGrpcClient);
-mqttUtils.SubscribeAndHandleMessage();*/
 
 WebApplication app = builder.Build();
 
