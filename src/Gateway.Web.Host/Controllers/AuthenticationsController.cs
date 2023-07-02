@@ -98,6 +98,8 @@ namespace Gateway.Web.Host.Controllers
                 });
             }
         }
+
+        [Authorize]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromBody] LogoutInputDto input)
         {
