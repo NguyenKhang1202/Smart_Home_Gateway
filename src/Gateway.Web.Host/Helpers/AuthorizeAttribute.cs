@@ -1,7 +1,6 @@
 ﻿using Gateway.Web.Host.Protos.Authentications;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Linq;
 
 namespace Gateway.Web.Host.Helpers
 {
@@ -9,7 +8,7 @@ namespace Gateway.Web.Host.Helpers
     public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
         private readonly IList<string> _roles;
-        public AuthorizeAttribute(params string[] roles) 
+        public AuthorizeAttribute(params string[] roles)
         {
             _roles = roles;
         }
@@ -22,10 +21,10 @@ namespace Gateway.Web.Host.Helpers
 
             // authorization
             PUserInfo? userInfo = (PUserInfo?)context.HttpContext.Items["User"];
-            if(userInfo == null || (_roles.Any() && !_roles.Contains(userInfo.Role)))
+            if (userInfo == null || (_roles.Any() && !_roles.Contains(userInfo.Role)))
             {
-                context.Result = new JsonResult(new { message = "Unauthorized" }) 
-                    { StatusCode = StatusCodes.Status401Unauthorized };
+                context.Result = new JsonResult(new { message = "Unauthorized" })
+                { StatusCode = StatusCodes.Status401Unauthorized };
             }
             return;
         }

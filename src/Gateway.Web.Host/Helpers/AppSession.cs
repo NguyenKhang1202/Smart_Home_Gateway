@@ -10,7 +10,7 @@ namespace Gateway.Web.Host.Helpers
     public class AppSession : IAppSession
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public AppSession(IHttpContextAccessor httpContextAccessor) 
+        public AppSession(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
@@ -20,8 +20,8 @@ namespace Gateway.Web.Host.Helpers
         }
         public string GetUserId()
         {
-            PUserInfo user = (PUserInfo)_httpContextAccessor.HttpContext!.Items["User"]!;
-            return user.UserId;
+            PUserInfo? user = (PUserInfo)_httpContextAccessor.HttpContext!.Items["User"]!;
+            if (user != null) return user.UserId; else return "";
         }
     }
 }

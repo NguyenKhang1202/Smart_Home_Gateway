@@ -28,6 +28,7 @@ message PUser {
   repeated string FCMToken = 10;
   string CreatedAt = 11;
   string UpdatedAt = 12;
+  string RefreshToken = 13;
 }
 
 message PUserInfo {

@@ -11,7 +11,7 @@ namespace Gateway.Web.Host.Helpers
             AuthenticationGrpc.AuthenticationGrpcClient authenticationGrpcClient,
             UserGrpc.UserGrpcClient userGrpcClient)
         {
-            _authenticationGrpcClient = authenticationGrpcClient; 
+            _authenticationGrpcClient = authenticationGrpcClient;
             _userGrpcClient = userGrpcClient;
         }
 
@@ -37,9 +37,10 @@ namespace Gateway.Web.Host.Helpers
                 PUserInfo userInfo = response.Data;
                 context.Items["User"] = userInfo;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                //  throw new Exception(ex.Message);
+                Console.WriteLine(ex.Message);
             }
         }
     }

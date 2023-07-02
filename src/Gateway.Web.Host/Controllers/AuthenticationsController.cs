@@ -17,7 +17,7 @@ namespace Gateway.Web.Host.Controllers
         public AuthenticationsController(
             AuthenticationGrpc.AuthenticationGrpcClient authenticationGrpcClient,
             IAppSession appSession,
-            IMapper mapper) 
+            IMapper mapper)
         {
             _authenticationGrpcClient = authenticationGrpcClient;
             _appSession = appSession;
@@ -70,9 +70,8 @@ namespace Gateway.Web.Host.Controllers
                 });
             }
         }
-        [Authorize]
         [HttpPost("refreshToken")]
-        public async Task<ResponseDto> RefreshToken([FromBody] RefreshTokenInputDto input)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenInputDto input)
         {
             try
             {
@@ -82,21 +81,25 @@ namespace Gateway.Web.Host.Controllers
                     UserId = _appSession.GetUserId(),
                 };
                 RefreshTokenResponse response = await _authenticationGrpcClient.RefreshTokenAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
-                    Data = response,
+                    Data = response.AccessToken,
                     Success = true,
                     Message = "Refresh token success!"
-                };
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return Unauthorized(new ResponseDto()
+                {
+                    Data = String.Empty,
+                    Success = false,
+                    Message = "Refresh token failed!"
+                });
             }
         }
-        [Authorize]
         [HttpPost("logout")]
-        public async Task<ResponseDto> Logout([FromBody] LogoutInputDto input)
+        public async Task<IActionResult> Logout([FromBody] LogoutInputDto input)
         {
             try
             {
@@ -106,72 +109,72 @@ namespace Gateway.Web.Host.Controllers
                     FCMToken = input.FcmToken ?? "",
                 };
                 LogoutResponse response = await _authenticationGrpcClient.LogoutAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response,
                     Success = true,
                     Message = "Logout success!"
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new ResponseDto()
+                return BadRequest(new ResponseDto()
                 {
-                    Data = null,
+                    Data = ex.Message,
                     Success = false,
                     Message = "Logout fail!"
-                };
+                });
             }
         }
         [Authorize]
         [HttpPost("change-password")]
-        public async Task<ResponseDto> ChangePassword([FromBody] ChangePasswordInputDto input)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordInputDto input)
         {
             try
             {
                 ChangePasswordRequest request = _mapper.Map<ChangePasswordRequest>(input);
                 request.UserId = _appSession.GetUserId();
                 ChangePasswordResponse response = await _authenticationGrpcClient.ChangePasswordAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Change password success"
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new ResponseDto()
+                return BadRequest(new ResponseDto()
                 {
                     Data = ex.Message,
                     Success = false,
                     Message = "Change password fail"
-                };
+                });
             }
         }
 
         [HttpPost("verify-token")]
-        public async Task<ResponseDto> VerifyToken([FromBody] VerifyTokenInputDto input)
+        public async Task<IActionResult> VerifyToken([FromBody] VerifyTokenInputDto input)
         {
             try
             {
                 ValidateTokenRequest request = _mapper.Map<ValidateTokenRequest>(input);
                 ValidateTokenResponse response = await _authenticationGrpcClient.ValidateTokenAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = true,
                     Success = true,
                     Message = "Verify token success"
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new ResponseDto()
+                return Unauthorized(new ResponseDto()
                 {
                     Data = ex.Message,
                     Success = false,
                     Message = "Token is invalid"
-                };
+                });
             }
         }
     }

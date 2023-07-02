@@ -2,9 +2,7 @@
 using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Homes;
 using Gateway.Web.Host.Helpers;
-using Gateway.Web.Host.Protos.Authentications;
 using Gateway.Web.Host.Protos.Homes;
-using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Web.Host.Controllers
@@ -21,7 +19,7 @@ namespace Gateway.Web.Host.Controllers
             HomeGrpc.HomeGrpcClient homeGrpcClient,
             IAppSession appSession,
             IMapper mapper
-            ) 
+            )
         {
             _homeGrpcClient = homeGrpcClient;
             _appSession = appSession;
@@ -29,33 +27,34 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ResponseDto> GetAllHomes([FromQuery] GetAllHomesInputDto input)
+        public async Task<IActionResult> GetAllHomes([FromQuery] GetAllHomesInputDto input)
         {
             try
             {
                 GetAllHomesRequest request = _mapper.Map<GetAllHomesRequest>(input);
                 request.UserId = _appSession.GetUserId();
                 GetAllHomesResponse response = await _homeGrpcClient.GetAllHomesAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     TotalCount = response.TotalCount,
                     Data = response.Items,
                     Success = true,
                     Message = "Get homes success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Get homes failed"
+                });
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ResponseDto> GetHomeById(string id)
+        public async Task<IActionResult> GetHomeById(string id)
         {
             try
             {
@@ -64,74 +63,77 @@ namespace Gateway.Web.Host.Controllers
                     {
                         Id = id,
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Get home success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Get home failed"
+                });
             }
         }
 
         [HttpPost("")]
-        public async Task<ResponseDto> CreateHome([FromBody] CreateHomeInputDto input)
+        public async Task<IActionResult> CreateHome([FromBody] CreateHomeInputDto input)
         {
             try
             {
                 CreateHomeRequest request = _mapper.Map<CreateHomeRequest>(input);
                 request.UserId = _appSession.GetUserId();
                 CreateHomeResponse response = await _homeGrpcClient.CreateHomeAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Create home success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Create home failed"
+                });
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<ResponseDto> UpdateHome(string id, [FromBody] UpdateHomeInputDto input)
+        public async Task<IActionResult> UpdateHome(string id, [FromBody] UpdateHomeInputDto input)
         {
             try
             {
                 UpdateHomeResponse response = await _homeGrpcClient.UpdateHomeAsync(
                     _mapper.Map<UpdateHomeRequest>(input));
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Update home success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Update home failed"
+                });
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ResponseDto> DeleteHome(string id)
+        public async Task<IActionResult> DeleteHome(string id)
         {
             try
             {
@@ -140,20 +142,21 @@ namespace Gateway.Web.Host.Controllers
                     {
                         Id = id
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Delete home success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Delete home failed"
+                });
             }
         }
     }

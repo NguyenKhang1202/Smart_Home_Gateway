@@ -6,7 +6,6 @@ using Gateway.Core.Settings;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Devices;
 using Gateway.Web.Host.Services;
-using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using static Gateway.Application.Shared.Enums.DeviceEnum;
@@ -36,32 +35,33 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ResponseDto> GetAllDevices([FromQuery] GetAllDevicesInputDto input)
+        public async Task<IActionResult> GetAllDevices([FromQuery] GetAllDevicesInputDto input)
         {
             try
             {
                 GetAllDevicesResponse response = await _deviceGrpcClient.GetAllDevicesAsync(
                     _mapper.Map<GetAllDevicesRequest>(input));
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     TotalCount = response.TotalCount,
                     Data = response.Items,
                     Success = true,
                     Message = "Get devices success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Get devices failed"
+                });
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ResponseDto> GetDeviceById(string id)
+        public async Task<IActionResult> GetDeviceById(string id)
         {
             try
             {
@@ -70,24 +70,25 @@ namespace Gateway.Web.Host.Controllers
                     {
                         Id = id,
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Get device success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Get device failed"
+                });
             }
         }
         [HttpGet("code/{deviceCode}")]
-        public async Task<ResponseDto> GetDeviceByCode(string deviceCode)
+        public async Task<IActionResult> GetDeviceByCode(string deviceCode)
         {
             try
             {
@@ -96,20 +97,21 @@ namespace Gateway.Web.Host.Controllers
                     {
                         DeviceCode = deviceCode,
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Get device success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Get device failed"
+                });
             }
         }
 
@@ -206,42 +208,44 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Create device success"
                 });
             }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
-            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Create device failed"
+                });
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<ResponseDto> UpdateDevice(string id, [FromBody] UpdateDeviceInputDto input)
+        public async Task<IActionResult> UpdateDevice(string id, [FromBody] UpdateDeviceInputDto input)
         {
             try
             {
                 UpdateDeviceResponse response = await _deviceGrpcClient.UpdateDeviceAsync(
                     _mapper.Map<UpdateDeviceRequest>(input));
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Update device success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Update device failed"
+                });
             }
         }
 
         [HttpPost("control/{id}")]
-        public async Task<ResponseDto> ControlDevice(string id, [FromBody] ControlDeviceInputDto input)
+        public async Task<IActionResult> ControlDevice(string id, [FromBody] ControlDeviceInputDto input)
         {
             try
             {
@@ -304,25 +308,26 @@ namespace Gateway.Web.Host.Controllers
                     };
                     _mqttService.PublishMqtt(TOPIC_CONTROL, JsonConvert.SerializeObject(payload));
                 }
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = controlResponse.Data,
                     Success = true,
                     Message = "Control device success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Control device failed"
+                });
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ResponseDto> DeleteDevice(string id)
+        public async Task<IActionResult> DeleteDevice(string id)
         {
             try
             {
@@ -368,20 +373,21 @@ namespace Gateway.Web.Host.Controllers
                     {
                         Id = id
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Delete device success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = ex.Message,
+                    Success = false,
+                    Message = "Delete device failed"
+                });
             }
         }
 

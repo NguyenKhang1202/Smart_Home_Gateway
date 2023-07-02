@@ -2,9 +2,7 @@
 using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Users;
 using Gateway.Web.Host.Helpers;
-using Gateway.Web.Host.Protos.Authentications;
 using Gateway.Web.Host.Protos.Users;
-using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Web.Host.Controllers
@@ -21,7 +19,7 @@ namespace Gateway.Web.Host.Controllers
             UserGrpc.UserGrpcClient userGrpcClient,
             IAppSession appSession,
             IMapper mapper
-            ) 
+            )
         {
             _userGrpcClient = userGrpcClient;
             _appSession = appSession;
@@ -29,32 +27,33 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ResponseDto> GetAllUsers([FromQuery] GetAllUsersInputDto input)
+        public async Task<IActionResult> GetAllUsers([FromQuery] GetAllUsersInputDto input)
         {
             try
             {
                 GetAllUsersResponse response = await _userGrpcClient.GetAllUsersAsync(
                     _mapper.Map<GetAllUsersRequest>(input));
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     TotalCount = response.TotalCount,
                     Data = response.Items,
                     Success = true,
                     Message = "Get users success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Get users failed"
+                });
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ResponseDto> GetUserById(string id)
+        public async Task<IActionResult> GetUserById(string id)
         {
             try
             {
@@ -63,49 +62,51 @@ namespace Gateway.Web.Host.Controllers
                     {
                         Id = id,
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Get user success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Get user failed"
+                });
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<ResponseDto> UpdateUser(string id, [FromBody] UpdateUserInputDto input)
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserInputDto input)
         {
             try
             {
                 UpdateUserResponse response = await _userGrpcClient.UpdateUserAsync(
                     _mapper.Map<UpdateUserRequest>(input));
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Update user success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Update user failed"
+                });
             }
         }
 
         [HttpPost("fcmToken")]
-        public async Task<ResponseDto> SaveFcmToken([FromBody] SaveFcmTokenInputDto input)
+        public async Task<IActionResult> SaveFcmToken([FromBody] SaveFcmTokenInputDto input)
         {
             try
             {
@@ -115,25 +116,26 @@ namespace Gateway.Web.Host.Controllers
                     FCMToken = input.FcmToken ?? "",
                 };
                 SaveFcmTokenResponse response = await _userGrpcClient.SaveFcmTokenAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Save FcmToken success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Save FcmToken failed"
+                });
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ResponseDto> DeleteUser(string id)
+        public async Task<IActionResult> DeleteUser(string id)
         {
             try
             {
@@ -142,20 +144,21 @@ namespace Gateway.Web.Host.Controllers
                     {
                         Id = id
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Delete user success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Delete user failed"
+                });
             }
         }
     }

@@ -3,7 +3,6 @@ using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Notifications;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Notifications;
-using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Web.Host.Controllers
@@ -20,7 +19,7 @@ namespace Gateway.Web.Host.Controllers
             NotificationGrpc.NotificationGrpcClient notificationGrpcClient,
             IAppSession appSession,
             IMapper mapper
-            ) 
+            )
         {
             _notificationGrpcClient = notificationGrpcClient;
             _appSession = appSession;
@@ -28,33 +27,34 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ResponseDto> GetAllNotifications([FromQuery] GetAllNotificationsInputDto input)
+        public async Task<IActionResult> GetAllNotifications([FromQuery] GetAllNotificationsInputDto input)
         {
             try
             {
                 GetAllNotificationsRequest request = _mapper.Map<GetAllNotificationsRequest>(input);
                 request.UserId = _appSession.GetUserId();
                 GetAllNotificationsResponse response = await _notificationGrpcClient.GetAllNotificationsAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     TotalCount = response.TotalCount,
                     Data = response.Items,
                     Success = true,
                     Message = "Get notifications success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Get notifications failed"
+                });
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ResponseDto> GetNotificationById(string id)
+        public async Task<IActionResult> GetNotificationById(string id)
         {
             try
             {
@@ -63,98 +63,102 @@ namespace Gateway.Web.Host.Controllers
                     {
                         Id = id,
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Get notification success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Get notification failed"
+                });
             }
         }
 
         [HttpPost("")]
-        public async Task<ResponseDto> CreateNotification([FromBody] CreateNotificationInputDto input)
+        public async Task<IActionResult> CreateNotification([FromBody] CreateNotificationInputDto input)
         {
             try
             {
                 CreateNotificationRequest request = _mapper.Map<CreateNotificationRequest>(input);
                 request.UserId = _appSession.GetUserId();
                 CreateNotificationResponse response = await _notificationGrpcClient.CreateNotificationAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Create notification success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Create notification failed"
+                });
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<ResponseDto> UpdateNotification(string id, [FromBody] UpdateNotificationInputDto input)
+        public async Task<IActionResult> UpdateNotification(string id, [FromBody] UpdateNotificationInputDto input)
         {
             try
             {
                 UpdateNotificationResponse response = await _notificationGrpcClient.UpdateNotificationAsync(
                     _mapper.Map<UpdateNotificationRequest>(input));
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Update notification success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Update notification failed"
+                });
             }
         }
 
         [HttpPut("status")]
-        public async Task<ResponseDto> UpdateStatusNotification(string id, [FromBody] UpdateStatusNotificationInputDto input)
+        public async Task<IActionResult> UpdateStatusNotification(string id, [FromBody] UpdateStatusNotificationInputDto input)
         {
             try
             {
                 UpdateStatusNotificationResponse response = await _notificationGrpcClient.UpdateStatusNotificationAsync(
                     _mapper.Map<UpdateStatusNotificationRequest>(input));
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Update status notification success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Update status notification failed"
+                });
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ResponseDto> DeleteNotification(string id)
+        public async Task<IActionResult> DeleteNotification(string id)
         {
             try
             {
@@ -163,20 +167,21 @@ namespace Gateway.Web.Host.Controllers
                     {
                         Id = id
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Delete notification success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Delete notification failed"
+                });
             }
         }
     }

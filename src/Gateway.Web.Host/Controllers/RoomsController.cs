@@ -3,7 +3,6 @@ using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Rooms;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Rooms;
-using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Web.Host.Controllers
@@ -28,32 +27,33 @@ namespace Gateway.Web.Host.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ResponseDto> GetAllRooms([FromQuery] GetAllRoomsInputDto input)
+        public async Task<IActionResult> GetAllRooms([FromQuery] GetAllRoomsInputDto input)
         {
             try
             {
                 GetAllRoomsResponse response = await _roomGrpcClient.GetAllRoomsAsync(
                     _mapper.Map<GetAllRoomsRequest>(input));
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     TotalCount = response.TotalCount,
                     Data = response.Items,
                     Success = true,
                     Message = "Get rooms success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Get rooms failed"
+                });
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ResponseDto> GetRoomById(string id)
+        public async Task<IActionResult> GetRoomById(string id)
         {
             try
             {
@@ -62,74 +62,77 @@ namespace Gateway.Web.Host.Controllers
                     {
                         Id = id,
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Get room success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Get room failed"
+                });
             }
         }
 
         [HttpPost("")]
-        public async Task<ResponseDto> CreateRoom([FromBody] CreateRoomInputDto input)
+        public async Task<IActionResult> CreateRoom([FromBody] CreateRoomInputDto input)
         {
             try
             {
                 CreateRoomRequest request = _mapper.Map<CreateRoomRequest>(input);
                 request.UserId = _appSession.GetUserId();
                 CreateRoomResponse response = await _roomGrpcClient.CreateRoomAsync(request);
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Create room success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Create room failed"
+                });
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<ResponseDto> UpdateRoom(string id, [FromBody] UpdateRoomInputDto input)
+        public async Task<IActionResult> UpdateRoom(string id, [FromBody] UpdateRoomInputDto input)
         {
             try
             {
                 UpdateRoomResponse response = await _roomGrpcClient.UpdateRoomAsync(
                     _mapper.Map<UpdateRoomRequest>(input));
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Update room success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Update room failed"
+                });
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ResponseDto> DeleteRoom(string id)
+        public async Task<IActionResult> DeleteRoom(string id)
         {
             try
             {
@@ -138,20 +141,21 @@ namespace Gateway.Web.Host.Controllers
                     {
                         Id = id
                     });
-                return new ResponseDto()
+                return Ok(new ResponseDto()
                 {
                     Data = response.Data,
                     Success = true,
                     Message = "Delete room success"
-                };
-            }
-            catch (RpcException ex)
-            {
-                throw new Exception(ex.Message);
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Delete room failed"
+                });
             }
         }
     }
