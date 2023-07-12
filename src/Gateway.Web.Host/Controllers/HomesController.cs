@@ -88,6 +88,7 @@ namespace Gateway.Web.Host.Controllers
             {
                 CreateHomeRequest request = _mapper.Map<CreateHomeRequest>(input);
                 request.UserId = _appSession.GetUserId();
+                request.SmartHomeCode = $"{_appSession.GetCurrentUser().Username.ToUpper()}_{HelpersClass.GenerateOrderCode()}";
                 CreateHomeResponse response = await _homeGrpcClient.CreateHomeAsync(request);
                 return Ok(new ResponseDto()
                 {

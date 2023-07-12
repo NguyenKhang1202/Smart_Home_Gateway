@@ -87,6 +87,7 @@ namespace Gateway.Web.Host.Controllers
             {
                 CreateRoomRequest request = _mapper.Map<CreateRoomRequest>(input);
                 request.UserId = _appSession.GetUserId();
+                request.RoomCode = $"{_appSession.GetCurrentUser().Username.ToUpper()}_{HelpersClass.GenerateOrderCode()}";
                 CreateRoomResponse response = await _roomGrpcClient.CreateRoomAsync(request);
                 return Ok(new ResponseDto()
                 {
