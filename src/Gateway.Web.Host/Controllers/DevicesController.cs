@@ -214,7 +214,7 @@ namespace Gateway.Web.Host.Controllers
                 {
                     Data = ex.Message,
                     Success = false,
-                    Message = "Create device failed"
+                    Message = "Create device failed. Device is existed"
                 });
             }
         }
