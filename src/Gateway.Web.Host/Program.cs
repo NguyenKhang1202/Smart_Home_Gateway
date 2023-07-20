@@ -7,8 +7,11 @@ using Gateway.Web.Host.Protos.Notifications;
 using Gateway.Web.Host.Protos.Rooms;
 using Gateway.Web.Host.Protos.Users;
 using Gateway.Web.Host.Services;
+using log4net;
+using log4net.Config;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -16,6 +19,14 @@ var configuration = builder.Configuration;
 // Add services to DI container.
 IServiceCollection services = builder.Services;
 {
+    var logRepository = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
+    XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+    services.AddSingleton(LogManager.GetLogger(typeof(Program)));
+    services.AddLogging(builder =>
+    {
+        builder.SetMinimumLevel(LogLevel.Debug);
+        builder.AddLog4Net();
+    });
 
     services.AddControllers();
     services.AddSwaggerGen(option =>

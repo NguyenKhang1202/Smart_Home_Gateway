@@ -15,14 +15,17 @@ namespace Gateway.Web.Host.Controllers
         private readonly HomeGrpc.HomeGrpcClient _homeGrpcClient;
         private readonly IAppSession _appSession;
         private readonly IMapper _mapper;
+        private readonly ILogger<HomesController> _logger;
         public HomesController(
             HomeGrpc.HomeGrpcClient homeGrpcClient,
+            ILogger<HomesController> logger,
             IAppSession appSession,
             IMapper mapper
             )
         {
             _homeGrpcClient = homeGrpcClient;
             _appSession = appSession;
+            _logger = logger;
             _mapper = mapper;
         }
 
@@ -44,6 +47,7 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -99,6 +103,7 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -124,6 +129,7 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -152,6 +158,7 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogDebug(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
