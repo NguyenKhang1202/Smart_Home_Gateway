@@ -3,6 +3,7 @@ using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Authentications;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Authentications;
+using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Web.Host.Controllers
@@ -36,6 +37,15 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Login success!"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
                 return BadRequest(new ResponseDto()
@@ -58,6 +68,15 @@ namespace Gateway.Web.Host.Controllers
                     Data = response.Data,
                     Success = true,
                     Message = "Register success!"
+                });
+            }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
                 });
             }
             catch (Exception ex)
@@ -86,6 +105,15 @@ namespace Gateway.Web.Host.Controllers
                     Data = response.AccessToken,
                     Success = true,
                     Message = "Refresh token success!"
+                });
+            }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
                 });
             }
             catch (Exception ex)
@@ -118,6 +146,15 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Logout success!"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
                 return BadRequest(new ResponseDto()
@@ -144,6 +181,15 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Change password success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
                 return BadRequest(new ResponseDto()
@@ -167,6 +213,15 @@ namespace Gateway.Web.Host.Controllers
                     Data = true,
                     Success = true,
                     Message = "Verify token success"
+                });
+            }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
                 });
             }
             catch (Exception ex)
