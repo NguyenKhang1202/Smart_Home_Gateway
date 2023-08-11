@@ -6,6 +6,7 @@ using Gateway.Core.Settings;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Devices;
 using Gateway.Web.Host.Services;
+using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using static Gateway.Application.Shared.Enums.DeviceEnum;
@@ -49,11 +50,21 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Get devices success"
                 });
             }
-            catch (Exception ex)
+            catch (RpcException ex)
             {
                 return BadRequest(new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
                     Success = false,
                     Message = "Get devices failed"
                 });
@@ -77,11 +88,21 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Get device success"
                 });
             }
-            catch (Exception ex)
+            catch (RpcException ex)
             {
                 return BadRequest(new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
                     Success = false,
                     Message = "Get device failed"
                 });
@@ -104,11 +125,21 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Get device success"
                 });
             }
-            catch (Exception ex)
+            catch (RpcException ex)
             {
                 return BadRequest(new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
                     Success = false,
                     Message = "Get device failed"
                 });
@@ -135,9 +166,9 @@ namespace Gateway.Web.Host.Controllers
                             deviceCode = input.DeviceCode,
                             mac = input.MacAddress,
                         },
-                        deviceCode = input.DeviceCode,
+                        deviceCode = input.DeviceCode!,
                         time = HelpersClass.GetCurrentTimeByLong(),
-                        mac = input.MacAddress,
+                        mac = input.MacAddress!,
                         to = DEVICE_PUBLISH_GATEWAY,
                         from = DEVICE_PUBLISH_CLOUD,
                         type = TYPE_REGISTER_RESP,
@@ -151,8 +182,8 @@ namespace Gateway.Web.Host.Controllers
                     {
                         return NotFound(new ResponseDto()
                         {
-                            Success = false,
                             Data = null,
+                            Success = false,
                             Message = "Gateway not found. Device insertion failed!",
                         });
                     }
@@ -166,9 +197,9 @@ namespace Gateway.Web.Host.Controllers
                                 ep = 1,
                                 value = new()
                                 {
-                                    mac = input.MacAddress,
+                                    mac = input.MacAddress!,
                                 },
-                                mac = input.MacAddress,
+                                mac = input.MacAddress!,
                             },
                             command = COMMAND_ADD_DEVICE,
                             id = $"{input.DeviceCode}_{input.Name}",
@@ -208,13 +239,23 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Create device success"
                 });
             }
-            catch (Exception ex)
+            catch (RpcException ex)
             {
                 return BadRequest(new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
                     Success = false,
-                    Message = "Create device failed. Device is existed"
+                    Message = ex.Status.Detail
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Create device failed"
                 });
             }
         }
@@ -233,11 +274,21 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Update device success"
                 });
             }
-            catch (Exception ex)
+            catch (RpcException ex)
             {
                 return BadRequest(new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
                     Success = false,
                     Message = "Update device failed"
                 });
@@ -281,7 +332,7 @@ namespace Gateway.Web.Host.Controllers
                             arguments = new()
                             {
                                 mac = responseGetDevice.Data.MacAddress,
-                                ep = input.ControlDusun.EndPoint.ToString(),
+                                ep = input.ControlDusun!.EndPoint.ToString(),
                                 attribute = ATTRIBUTE_CONTROL_DEVICE,
                                 value = new()
                                 {
@@ -315,11 +366,21 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Control device success"
                 });
             }
-            catch (Exception ex)
+            catch (RpcException ex)
             {
                 return BadRequest(new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
                     Success = false,
                     Message = "Control device failed"
                 });
@@ -380,18 +441,28 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Delete device success"
                 });
             }
-            catch (Exception ex)
+            catch (RpcException ex)
             {
                 return BadRequest(new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
                     Success = false,
                     Message = "Delete device failed"
                 });
             }
         }
 
-        private List<PDataDusun> GetListEndPointDevice(int type)
+        private static List<PDataDusun> GetListEndPointDevice(int type)
         {
             List<PDataDusun> dataDusuns = new();
             switch (type)

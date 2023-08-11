@@ -3,6 +3,7 @@ using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Homes;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Homes;
+using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Web.Host.Controllers
@@ -42,8 +43,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Get homes success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -70,8 +81,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Get home success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -97,8 +118,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Create home success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -122,8 +153,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Update home success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -150,8 +191,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Delete home success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,

@@ -48,6 +48,7 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -81,6 +82,7 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -118,6 +120,7 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return Unauthorized(new ResponseDto()
                 {
                     Data = String.Empty,
@@ -157,9 +160,10 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
                     Success = false,
                     Message = "Logout fail!"
                 });
@@ -192,9 +196,10 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
                     Success = false,
                     Message = "Change password fail"
                 });
@@ -226,9 +231,10 @@ namespace Gateway.Web.Host.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return Unauthorized(new ResponseDto()
                 {
-                    Data = ex.Message,
+                    Data = null,
                     Success = false,
                     Message = "Token is invalid"
                 });

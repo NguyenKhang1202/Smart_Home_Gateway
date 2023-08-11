@@ -3,6 +3,7 @@ using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Users;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Users;
+using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Web.Host.Controllers
@@ -41,8 +42,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Get users success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -69,8 +80,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Get user success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -94,8 +115,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Update user success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -123,8 +154,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Save FcmToken success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -151,8 +192,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Delete user success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,

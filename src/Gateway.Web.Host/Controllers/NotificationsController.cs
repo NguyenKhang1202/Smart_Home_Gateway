@@ -3,6 +3,7 @@ using Gateway.Core.Dtos;
 using Gateway.Core.Dtos.Notifications;
 using Gateway.Web.Host.Helpers;
 using Gateway.Web.Host.Protos.Notifications;
+using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Web.Host.Controllers
@@ -42,8 +43,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Get notifications success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -70,8 +81,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Get notification success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -96,8 +117,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Create notification success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -121,8 +152,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Update notification success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -146,8 +187,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Update status notification success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,
@@ -174,8 +225,18 @@ namespace Gateway.Web.Host.Controllers
                     Message = "Delete notification success"
                 });
             }
+            catch (RpcException ex)
+            {
+                return BadRequest(new ResponseDto()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = ex.Status.Detail
+                });
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new ResponseDto()
                 {
                     Data = null,

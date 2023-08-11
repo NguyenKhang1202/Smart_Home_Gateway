@@ -135,7 +135,7 @@ namespace Gateway.Web.Host.Controllers
             try
             {
                 UpdateGatewayResponse response = await _deviceGrpcClient.UpdateGatewayAsync(
-                    _mapper.Map<UpdateGatewayRequest>(input));  
+                    _mapper.Map<UpdateGatewayRequest>(input));
                 return new ResponseDto()
                 {
                     Data = response.Data,

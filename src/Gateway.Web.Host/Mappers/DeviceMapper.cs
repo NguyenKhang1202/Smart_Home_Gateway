@@ -45,7 +45,7 @@ namespace Gateway.Web.Host.Mappers
                 }))
                 .ForMember(d => d.ControlDusun, s => s.MapFrom(i => new PControlDeviceDusun()
                 {
-                    EndPoint = i.ControlDusun.EndPoint,
+                    EndPoint = i.ControlDusun!.EndPoint,
                     Value = i.ControlDusun.Value,
                 }));
             CreateMap<PControl, ControlDevice>()
